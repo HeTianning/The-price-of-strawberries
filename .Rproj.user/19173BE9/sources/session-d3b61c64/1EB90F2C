@@ -1,0 +1,26 @@
+{
+    "id": "1EB90F2C",
+    "path": "~/Desktop/The-price-of-strawberries/scripts/00-simulate_data.R",
+    "project_path": "scripts/00-simulate_data.R",
+    "type": "r_source",
+    "hash": "3281226589",
+    "contents": "",
+    "dirty": false,
+    "created": 1732401054447.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "4,24",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1732492730,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1732492730428,
+    "read_only": false,
+    "read_only_alternatives": []
+}
