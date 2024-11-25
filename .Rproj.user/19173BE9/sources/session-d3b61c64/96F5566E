@@ -3,7 +3,7 @@
     "path": "~/Desktop/The-price-of-strawberries/scripts/02-download_data.R",
     "project_path": "scripts/02-download_data.R",
     "type": "r_source",
-    "hash": "515093017",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1732413202586.0,
@@ -13,14 +13,14 @@
         "source_window_id": "",
         "Source": "Source",
         "cursorPosition": "15,0",
-        "scrollLine": "7"
+        "scrollLine": "8"
     },
     "folds": "",
-    "lastKnownWriteTime": 1732492730,
+    "lastKnownWriteTime": 1732567831,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1732492730441,
+    "last_content_update": 1732567831536,
     "read_only": false,
     "read_only_alternatives": []
 }

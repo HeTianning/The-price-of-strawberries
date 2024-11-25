@@ -4,22 +4,23 @@
 # Date: 23 November 2024
 # Contact: tianning.he@utoronto.ca 
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: None
+# Any other information needed? N/A
 
 
 #### Workspace setup ####
 library(tidyverse)
-# [...UPDATE THIS...]
-
-#### Download data ####
+library(dplyr)
 
 
+#### Reading in the downloaded data ####
+
+raw_data <- read.csv("data/01-raw_data/hammer-4-product.csv")
+
+#### Saving the data####
+
+write.csv(raw_data, file = "data/01-raw_data/raw_data.csv")
 
 
-#### Save data ####
-# [...UPDATE THIS...]
-# change the_raw_data to whatever name you assigned when you downloaded it.
-write_csv(the_raw_data, "inputs/data/raw_data.csv") 
 
          
