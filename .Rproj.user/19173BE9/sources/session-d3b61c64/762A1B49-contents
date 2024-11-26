@@ -19,7 +19,7 @@ set.seed(112)
 vendors <- c("Voila", "T&T", "Loblaws", "No Frills", "Metro", "Galleria", "Walmart", "Save-On-Foods")
 
 # Simulate strawberry price data
-simulated_data <- tibble(
+strawberry_data <- tibble(
   vendor = sample(vendors, size = 200, replace = TRUE), # 200 observations across 8 vendors
   price_per_lb = round(rnorm(200, mean = 3.5, sd = 0.5), 2), # Prices centered at $3.50 per lb
   organic = sample(
@@ -42,7 +42,7 @@ simulated_data <- tibble(
 )
 
 #### Save data ####
-write_csv(simulated_data, "data/00-simulated_data/simulated_data.csv")
+write_csv(strawberry_data, "data/00-simulated_data/simulated_strawberry_prices.csv")
 
 #### Inspect data ####
-print(head(simulated_data))
+print(head(strawberry_data))

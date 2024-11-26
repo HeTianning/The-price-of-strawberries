@@ -1,5 +1,5 @@
 ---
-title: "My title"
+title: "The price of strawberries at different suppliers in Canada"
 subtitle: "My subtitle if needed"
 author: 
   - Tianning He
