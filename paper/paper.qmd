@@ -6,7 +6,7 @@ author:
 thanks: "Code and data are available at: https://github.com/HeTianning/The-price-of-strawberries"
 date: 25 November 2024
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "This study investigates the pricing of strawberries across eight major suppliers in Canada: Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart, and Save-On-Foods. Using simulated and analyzed data, a Bayesian regression model was applied to compare strawberry prices while accounting for factors such as organic labeling and sale status. Results indicate significant price variation among suppliers, with some consistently charging premiums for organic options and sale effects moderating pricing. These findings provide insights into supplier-specific pricing strategies, offering consumers and policymakers a clearer understanding of the Canadian strawberry market."
 format: pdf
 number-sections: true
 bibliography: references.bib
