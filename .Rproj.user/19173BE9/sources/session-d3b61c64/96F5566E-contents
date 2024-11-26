@@ -1,5 +1,5 @@
 #### Preamble ####
-# Purpose: Downloads and saves the data from [...UPDATE THIS...]
+# Purpose: Downloads and saves the data of Canadian Grocery Price Data from Jacob Filipp
 # Author: Tianning He
 # Date: 23 November 2024
 # Contact: tianning.he@utoronto.ca 
