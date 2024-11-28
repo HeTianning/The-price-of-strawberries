@@ -1,0 +1,43 @@
+#### Preamble ####
+# Purpose: Cleans the raw Canadian grocery price data
+# Author: Tianning He
+# Date: 26 November 2024 
+# Contact: tianning.he@utoronto.ca 
+# License: MIT
+# Pre-requisites: Download and save the Canadian grocery price Data from Jacob Filipp
+# Any other information needed? As the downloaded raw data is saved into files, 
+# need to clean each file and then merge them together
+
+#### Workspace setup ####
+library(tidyverse)
+library(janitor)
+
+#### Clean data ####
+raw_data <- read_csv("data/01-raw_data/raw_data.csv") # Read in the raw data
+
+cleaned_data <-
+  raw_data |>
+  janitor::clean_names() |> # Clean column names for consistency
+  select(vendor, price_per_lb, organic, sale, date) |> # Select relevant columns
+  filter(price_per_lb > 0) |> # Remove rows with non-positive prices
+  mutate(
+    organic = if_else(organic %in% c("Yes", "No"), organic, NA_character_), # Validate organic field
+    sale = if_else(sale %in% c("On Sale", "Not on Sale"), sale, NA_character_), # Validate sale field
+    date = as.Date(date) # Convert date to proper date format
+  ) |>
+  drop_na() |> # Drop rows with missing values
+  rename(
+    vendor_name = vendor,
+    price = price_per_lb,
+    is_organic = organic,
+    sale_status = sale,
+    observation_date = date
+  )
+
+#### Save data ####
+write_csv(cleaned_data, "data/02-analysis_data/analysis_data.csv")
+
+#### Inspect cleaned data ####
+print(head(cleaned_data))
+
+

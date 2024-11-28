@@ -18,19 +18,22 @@ bibliography: references.bib
 #| message: false
 
 library(tidyverse)
-library(palmerpenguins)
+library(tinytex)
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(arrow)
+library(here)
+library(modelsummary)
 ```
 
 
 # Introduction
 
-Overview paragraph
-
-Estimand paragraph
-
-Results paragraph
-
-Why it matters paragraph
+The pricing of strawberries varies significantly across suppliers in Canada, reflecting differences in supply chains, market positioning, and consumer demand. This study focuses on eight prominent Canadian suppliers—Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart, and Save-On-Foods—to investigate patterns in strawberry pricing. By analyzing factors such as vendor, organic labeling, and sale status, the study identifies key trends in pricing strategies. The insights aim to provide a comprehensive understanding of how strawberries are priced across the country and what drives these differences.
+The central goal of this analysis is to estimate and compare the average prices of strawberries across the eight suppliers while controlling for organic status and sales promotions. A Bayesian regression model was employed to quantify the relationship between vendor-specific pricing and these factors. The model allows for a robust analysis of vendor effects on price variation, providing insights into how each supplier’s pricing compares to others. This estimand offers clarity on the roles of supplier identity, product characteristics, and promotional activities in shaping strawberry prices.
+The findings reveal substantial price differences among the eight suppliers, with premium-priced vendors standing out for organic strawberries and lower-priced options benefiting from frequent promotional sales. Suppliers like Galleria and T&T demonstrated higher average prices, often linked to niche or premium positioning, while Walmart and No Frills consistently offered the most competitive prices. Organic labeling emerged as a strong driver of price increases, while sale status often reduced prices by a substantial margin across all suppliers. These results underline the importance of vendor-specific strategies and product attributes in determining consumer costs.
+Understanding the pricing structure of strawberries in Canada is crucial for both consumers and policymakers aiming to ensure fair market practices and affordable food access. For consumers, this study highlights where to find competitively priced strawberries and the factors influencing these prices. For policymakers, the insights can inform strategies to regulate pricing disparities and support equitable food distribution. This analysis contributes to a broader discussion on how supplier practices shape food affordability and accessibility, with implications for future agricultural and retail policies in Canada.
 
 Telegraphing paragraph: The remainder of this paper is structured as follows. @sec-data....
 
@@ -40,37 +43,78 @@ Telegraphing paragraph: The remainder of this paper is structured as follows. @s
 
 
 # Data {#sec-data}
-
+To simulate, test, download, clean, and model data throughout this analysis, the statistical programming language R was used [@citeR]. Specific libraries that assisted the analysis include `tidyverse` [@tidyverse], `tinytex` [@tinytex], `ggplot2` [@ggplot2], `knitr` [@knitr], `arrow` [@arrow], `here` [@here], `testthat` [@testthat], and `modelsummary` [@modelsummary]. 
 ## Overview
 
 We use the statistical programming language R [@citeR].... Our data [@shelter].... Following @tellingstories, we consider...
 
-Overview text
+The data for this analysis was provided by Project Hammer [@data], which was collected through a process of scraping website UI screens from vendors within the Toronto community. It contains data on product details (e.g., product name, brand, current and old price, and unit of product) for 8 different grocery stores (Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart Canada, and Save-On-Foods). Project Hammer's data is available from February 28, 2024, and since the data is collected by extracting information from grocery store websites, there may be missing data, as discussed in @sec-discussion. Through the method of screen scraping, the raw data is intended to measure and reflect grocery store vendor decisions and product pricing trends.
+For this analysis, the eight vendors - Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart Canada, and Save-On-Foods - and their pricing for strawberries were considered. The variable “price” for each supplier in this analysis reflects the current price of their product at the time the data was downloaded.
 
 ## Measurement
 	
-Some paragraphs about how we go from a phenomena in the world to an entry in the dataset.
+The data captures strawberry pricing through a structured set of variables, ensuring a comprehensive analysis of supplier-based differences. The primary variable of interest, price_per_lb, is a continuous measure representing the price of strawberries per pound in Canadian dollars. This variable reflects vendor-specific pricing strategies and serves as the dependent variable in the analysis.
+
+Additional explanatory variables include vendor, a categorical variable indicating one of eight suppliers (Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart, and Save-On-Foods), and organic, a binary variable where "Yes" denotes organic strawberries and "No" represents non-organic ones. The sale variable is also binary, capturing whether the strawberries were on sale ("On Sale") or not ("Not on Sale").
+
+Finally, date is a temporal variable that records the observation date, enabling the study of potential seasonal trends or temporal price fluctuations. Together, these measurements allow for a detailed assessment of how strawberry prices are influenced by vendor identity, product attributes, and sales promotions, providing both granular and aggregate insights into the Canadian strawberry market.
+
+```{r}
+#| echo: false
+#| message: false
+#| label: tbl-rawdata
+#| tbl-cap: "Paramedic Services Incident Data for 2022" 
+
+data <- read_csv(here::here("data/01-raw_data/raw_data.csv"))
+
+# Filter for strawberry-related products
+strawberry_data <- data %>%
+  filter(str_detect(product_name, regex("strawberry", ignore_case = TRUE))) %>%
+  select(vendor, product_name, price_per_lb, organic, sale, units, date)
+
+# Display a sample of the strawberry data
+strawberry_data %>%
+  slice(1:5) %>%  # Display the first 5 rows for simplicity
+  kable(
+    col.names = c("Vendor", "Product Name", "Price Per Pound", "Organic", 
+                  "Sale", "Units", "Date"),
+    digits = 2,
+    booktabs = TRUE,
+    linesep = "",
+    align = c("l", "l", "r", "l", "l", "l", "l"),
+    format.args = list(big.mark = ","),
+    caption = "Sample Strawberry Data"
+  )
+
+```
 
 ## Outcome variables
 
-Add graphs, tables and text. Use sub-sub-headings for each outcome variable or update the subheading to be singular.
+The primary outcome variable in this study is price_per_lb, which represents the price of strawberries per pound, measured in Canadian dollars. This continuous variable serves as the dependent variable in the analysis and reflects the central focus of the study: understanding and comparing strawberry prices across different suppliers.
+
+The variability in price_per_lb is analyzed concerning the following factors:
+
+Vendor (vendor): A categorical variable indicating the supplier, which is expected to influence pricing strategies.
+Organic Status (organic): A binary variable ("Yes" or "No") indicating whether the strawberries are organic, which typically commands a premium price.
+Sale Status (sale): A binary variable ("On Sale" or "Not on Sale") capturing promotional discounts, often associated with lower prices.
+By modeling the outcome variable, the study investigates how these factors interact to explain price differences among suppliers. The insights derived from this analysis highlight the dynamics of strawberry pricing in Canada’s retail market.
 
 
 
 Some of our data is of penguins (@fig-bills), from @palmerpenguins.
 
 ```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
+#| label: fig-pricedistribution
+#| fig-cap: Distribution of Prices
 #| echo: false
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+ggplot(strawberry_data, aes(x = price_per_lb)) +
+  geom_histogram(binwidth = 0.2, fill = "skyblue", color = "black") +
+  labs(
+    x = "Price Per Pound (CAD)",
+    y = "Frequency"
+  ) +
+  theme_minimal()
 ```
 
 Talk more about it.
@@ -78,8 +122,8 @@ Talk more about it.
 And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
 
 ```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
+#| label: fig-vendor
+#| fig-cap: Price Distribution by Vendor
 #| echo: false
 #| warning: false
 #| message: false
@@ -87,22 +131,122 @@ And also planes (@fig-planes). (You can change the height and width, but don't w
 analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
 
 analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
+  ggplot(strawberry_data, aes(x = vendor, y = price_per_lb, fill = vendor)) +
+  geom_boxplot() +
+  labs(
+    x = "Vendor",
+    y = "Price Per Pound (CAD)"
+  ) +
   theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 Talk way more about it. 
+```{r}
+#| label: fig-organic
+#| fig-cap: Price Comparison: Organic vs Non-Organic
+#| echo: false
+#| warning: false
+#| message: false
+
+analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
+
+analysis_data |> 
+  ggplot(strawberry_data, aes(x = organic, y = price_per_lb, fill = organic)) +
+  geom_boxplot() +
+  labs(
+    x = "Organic Status",
+    y = "Price Per Pound (CAD)"
+  ) +
+  theme_minimal()
+
+```
+
+```{r}
+#| label: fig-sale
+#| fig-cap: Effect of Sale on Strawberry Prices
+#| echo: false
+#| warning: false
+#| message: false
+
+analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
+
+analysis_data |> 
+  ggplot(strawberry_data, aes(x = sale, y = price_per_lb, fill = sale)) +
+  geom_boxplot() +
+  labs(
+    x = "Sale Status",
+    y = "Price Per Pound (CAD)"
+  ) +
+  theme_minimal()
+
+```
+
+```{r}
+#| label: fig-date
+#| fig-cap: Strawberry Prices Over Time
+#| echo: false
+#| warning: false
+#| message: false
+
+price_trend <- strawberry_data %>%
+  group_by(date) %>%
+  summarise(avg_price = mean(price_per_lb, na.rm = TRUE))
+
+analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
+
+analysis_data |> 
+  ggplot(price_trend, aes(x = date, y = avg_price)) +
+  geom_line(color = "blue") +
+  geom_point(color = "red") +
+  labs(
+    title = "Strawberry Prices Over Time",
+    x = "Date",
+    y = "Average Price (CAD)"
+  ) +
+  theme_minimal()
+
+```
+
 
 ## Predictor variables
 
-Add graphs, tables and text.
+Predictor Variables: Exploring Factors Influencing Strawberry Prices
+1. Vendor (vendor)
+The vendor variable is categorical, representing the supplier of strawberries. Different vendors employ varying pricing strategies, which are reflected in the distribution of price_per_lb. Vendors such as Galleria and T&T may target premium markets, resulting in higher median prices, while Walmart and No Frills tend to offer lower prices. The table summarizes average prices for each vendor, and the boxplot illustrates the variability in pricing.
 
-Use sub-sub-headings for each outcome variable and feel free to combine a few into one if they go together naturally.
+2. Organic Status (organic)
+The organic variable is binary, indicating whether the strawberries are labeled as organic (Yes) or not (No). Organic strawberries typically command higher prices due to perceived quality and health benefits. The table summarizes average prices for organic and non-organic strawberries, and the boxplot highlights the significant price differences between these two categories.
 
+3. Sale Status (sale)
+The sale variable indicates whether the strawberries were on sale (On Sale) or not (Not on Sale). Promotions are a major driver of price reductions, and strawberries on sale consistently exhibit lower prices compared to regular-priced items. The table shows average prices by sale status, and the boxplot visually demonstrates the effect of sales on pricing.
 
+4. Time (date)
+The date variable is temporal, capturing the observation date for each price entry. Seasonal trends and time-based fluctuations are common in fresh produce pricing, including strawberries. By analyzing prices over time, we observe peaks and dips that may align with seasonal demand (e.g., summer months) or supply disruptions. The line chart below shows average prices across all vendors over time, while individual trends for each vendor reveal how pricing strategies change seasonally.
+
+5. Combined Analysis: Vendor, Organic, Sale, and Time
+To explore the combined effects of time, vendors, organic labeling, and sale status on prices, the bar chart below shows average prices segmented by vendor, organic status, and sale status across time intervals. This analysis highlights the interplay of these factors in shaping pricing strategies.
+
+```{r}
+#| label: fig-combined
+#| fig-cap: Price Trends by Vendor Over Time
+#| echo: false
+#| warning: false
+#| message: false
+
+analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
+
+analysis_data |> 
+  ggplot(strawberry_data, aes(x = date, y = price_per_lb, color = vendor)) +
+  geom_line() +
+  labs(
+    x = "Date",
+    y = "Price Per Pound (CAD)",
+    color = "Vendor"
+  ) +
+  theme_minimal()
+
+```
 
 
 
@@ -111,22 +255,33 @@ Use sub-sub-headings for each outcome variable and feel free to combine a few in
 
 # Model
 
-The goal of our modelling strategy is twofold. Firstly,...
+The purpose of building this model is to identify and quantify the factors that influence the price per lb of strawberries from different suppliers in Canada. The model aims to evaluate how predictors such as supplier, organic label, sale status, and time affect pricing. Quantify the impact of each predictor (e.g., supplier, organic status, sale status, and time) on the price of strawberries, compare pricing strategies between suppliers, analyze seasonal trends in strawberry prices, and identify periods of high or low prices, which will help discover patterns and provide actionable insights into pricing strategies and market dynamics.
 
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
+The model chosen for this analysis is a linear regression model because its simplicity, interpretability, and ability to model continuous outcomes make it well suited to explore the relationship between a continuous outcome variable ( price_per_lb ) and a set of predictors. The predictors include:
+
+vendor: a categorical variable representing the supplier.
+organic: a binary variable indicating whether the strawberries are organic.
+sale: a binary variable indicating whether the strawberries are on sale.
+date: a time variable that captures potential seasonal or time-related trends.
+
 
 ## Model set-up
 
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
+Define \( y_i \) as the price of strawberries per pound, measured in Canadian dollars, for the \( i \)-th observation. Let \( \beta_{vendor} \) represent the vendor-specific effects on price, \( \beta_{organic} \) capture the price premium for organic strawberries, and \( \beta_{sale} \) represent the price reduction due to sales promotions. The variable \( \beta_{date} \) models temporal changes in price, accounting for seasonal or time-based trends. Together, these variables predict \( y_i \), the price of strawberries, using the following formula:
 
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
+\[
+y_i = \beta_0 + \beta_{vendor} \cdot x_{vendor[i]} + \beta_{organic} \cdot x_{organic[i]} + \beta_{sale} \cdot x_{sale[i]} + \beta_{date} \cdot x_{date[i]} + \epsilon_i
+\]
+
+**Where:**
+
+- **\( y_i \)**: Price of strawberries per pound for observation \( i \).
+- **\( \beta_0 \)**: Intercept, representing the baseline price when all predictors are at reference levels (e.g., a specific vendor, non-organic, not on sale, and earliest date).
+- **\( \beta_{vendor} \)**: Coefficients for vendors, estimating price differences relative to a reference vendor.
+- **\( \beta_{organic} \)**: Coefficient for organic strawberries, capturing the price premium for organic labeling.
+- **\( \beta_{sale} \)**: Coefficient for sales, estimating the price reduction due to promotional discounts.
+- **\( \beta_{date} \)**: Coefficient for date, capturing seasonal or temporal trends.
+- **\( \epsilon_i \)**: Error term, accounting for variability not explained by the predictors.
 
 We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
 
