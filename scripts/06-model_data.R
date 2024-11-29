@@ -17,7 +17,7 @@ analysis_data <- read_csv("data/02-analysis_data/analysis_data.csv")
 
 # Set up the regression model for vendor comparison
 vendor_price_model <- stan_glm(
-  formula = price_per_lb ~ vendor + organic + sale, # Include vendor as the primary predictor
+  formula = price_per_lb ~ vendor + organic + sale + date, # Include date as a predictor
   data = clean_data,
   family = gaussian(), # Continuous outcome (price per pound)
   prior = normal(location = 0, scale = 2.5, autoscale = TRUE), # Priors for coefficients
@@ -25,6 +25,7 @@ vendor_price_model <- stan_glm(
   prior_aux = exponential(rate = 1, autoscale = TRUE), # Prior for auxiliary parameters
   seed = 853 # For reproducibility
 )
+
 
 # Save the model
 saveRDS(

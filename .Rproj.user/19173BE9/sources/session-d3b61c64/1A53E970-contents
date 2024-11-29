@@ -255,42 +255,102 @@ analysis_data |>
 
 # Model
 
-The purpose of building this model is to identify and quantify the factors that influence the price per lb of strawberries from different suppliers in Canada. The model aims to evaluate how predictors such as supplier, organic label, sale status, and time affect pricing. Quantify the impact of each predictor (e.g., supplier, organic status, sale status, and time) on the price of strawberries, compare pricing strategies between suppliers, analyze seasonal trends in strawberry prices, and identify periods of high or low prices, which will help discover patterns and provide actionable insights into pricing strategies and market dynamics.
+## Purpose of the Model
 
-The model chosen for this analysis is a linear regression model because its simplicity, interpretability, and ability to model continuous outcomes make it well suited to explore the relationship between a continuous outcome variable ( price_per_lb ) and a set of predictors. The predictors include:
+The purpose of this model is to identify and quantify the factors that influence the price per pound of strawberries from different suppliers in Canada. The analysis evaluates how key predictors, such as supplier, organic label, sale status, and time, affect pricing. Specifically, the model aims to:
 
-vendor: a categorical variable representing the supplier.
-organic: a binary variable indicating whether the strawberries are organic.
-sale: a binary variable indicating whether the strawberries are on sale.
-date: a time variable that captures potential seasonal or time-related trends.
+- Quantify the impact of each predictor (e.g., supplier, organic status, sale status, and time) on strawberry prices.
+- Compare pricing strategies across suppliers.
+- Analyze seasonal trends in strawberry prices and identify periods of high or low prices.
+- Provide actionable insights into pricing strategies and market dynamics.
+## Model Description
+
+The model chosen for this analysis is a **Bayesian linear regression model**. It builds upon the simplicity and interpretability of traditional linear regression but incorporates the Bayesian framework to provide more robust and probabilistic insights. 
+
+The predictors in the model include:
+- **Vendor (`vendor`)**: A categorical variable representing the supplier.
+- **Organic Status (`organic`)**: A binary variable indicating whether the strawberries are organic.
+- **Sale Status (`sale`)**: A binary variable indicating whether the strawberries are on sale.
+- **Date (`date`)**: A time variable capturing potential seasonal or time-related trends.
+
 
 
 ## Model set-up
 
-Define \( y_i \) as the price of strawberries per pound, measured in Canadian dollars, for the \( i \)-th observation. Let \( \beta_{vendor} \) represent the vendor-specific effects on price, \( \beta_{organic} \) capture the price premium for organic strawberries, and \( \beta_{sale} \) represent the price reduction due to sales promotions. The variable \( \beta_{date} \) models temporal changes in price, accounting for seasonal or time-based trends. Together, these variables predict \( y_i \), the price of strawberries, using the following formula:
+The Bayesian linear regression model is expressed as:
 
 \[
-y_i = \beta_0 + \beta_{vendor} \cdot x_{vendor[i]} + \beta_{organic} \cdot x_{organic[i]} + \beta_{sale} \cdot x_{sale[i]} + \beta_{date} \cdot x_{date[i]} + \epsilon_i
+y_i = \beta_0 + \beta_{vendor[i]} + \beta_{organic} \cdot x_{organic[i]} + \beta_{sale} \cdot x_{sale[i]} + \beta_{date} \cdot x_{date[i]} + \epsilon_i
 \]
 
-**Where:**
+**Where**:
+- \( y_i \): Price per pound of strawberries for observation \( i \) (dependent variable).
+- \( \beta_0 \): Intercept, representing the baseline price (reference vendor, non-organic, not on sale, and earliest date).
+- \( \beta_{vendor[i]} \): Vendor-specific effect, indicating how each supplier’s prices deviate from the baseline vendor.
+- \( \beta_{organic} \): Effect of organic labeling, representing the price premium for organic strawberries.
+- \( \beta_{sale} \): Effect of sale status, representing the price discount due to promotions.
+- \( \beta_{date} \): Effect of time, capturing trends in strawberry pricing.
+- \( \epsilon_i \): Residual error, accounting for variability not explained by the predictors.
+## Priors in the Bayesian Framework
 
-- **\( y_i \)**: Price of strawberries per pound for observation \( i \).
-- **\( \beta_0 \)**: Intercept, representing the baseline price when all predictors are at reference levels (e.g., a specific vendor, non-organic, not on sale, and earliest date).
-- **\( \beta_{vendor} \)**: Coefficients for vendors, estimating price differences relative to a reference vendor.
-- **\( \beta_{organic} \)**: Coefficient for organic strawberries, capturing the price premium for organic labeling.
-- **\( \beta_{sale} \)**: Coefficient for sales, estimating the price reduction due to promotional discounts.
-- **\( \beta_{date} \)**: Coefficient for date, capturing seasonal or temporal trends.
-- **\( \epsilon_i \)**: Error term, accounting for variability not explained by the predictors.
+In the Bayesian framework, priors are specified for each parameter:
+
+- **Coefficients (\( \beta \))**:
+  \[
+  \beta \sim \text{Normal}(0, 2.5)
+  \]
+  - This reflects the belief that most effects are small and centered around zero, with moderate variability.
+
+- **Residual Standard Deviation (\( \sigma \))**:
+  \[
+  \sigma \sim \text{Exponential}(1)
+  \]
+  - This ensures positivity and reflects typical variance patterns in continuous data.
+
+
 
 We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
 
 
 ### Model justification
 
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
+#### Why Use a Bayesian Linear Regression Model?
+A Bayesian linear regression model is an effective approach for this analysis because it balances simplicity, interpretability, and flexibility. It is particularly suited for modeling a continuous dependent variable, such as the price of strawberry, while allowing the incorporation of prior knowledge and the quantification of uncertainty in parameter estimates. This model provides a robust framework to understand how vendor, organic status, sale status, and time influence strawberry prices.
 
-We can use maths by including latex between dollar signs, for instance $\theta$.
+Traditional linear regression assumes a deterministic relationship between predictors and the outcome, providing point estimates for coefficients. However, the Bayesian approach enriches this by generating posterior distributions for all model parameters. These distributions capture the uncertainty inherent in the data, providing a clearer and more nuanced understanding of the predictors' effects.
+#### Benefits of Using Bayesian Regression
+
+1. **Uncertainty Quantification**:
+   - The Bayesian approach provides posterior distributions for parameters rather than single-point estimates. For example, the posterior distribution of \( \beta_{\text{organic}} \) allows us to quantify the uncertainty around the organic price premium.
+
+2. **Incorporating Prior Knowledge**:
+   - Priors enable the incorporation of domain knowledge into the model. For instance:
+     - The prior for \( \beta_{\text{organic}} \) reflects the expectation of a positive premium for organic strawberries.
+     - The prior for \( \beta_{\text{sale}} \) reflects the expectation that sales typically reduce prices.
+
+3. **Flexibility with Sparse Data**:
+   - Bayesian models stabilize parameter estimates when some predictors, such as certain vendors, have fewer observations. The priors act as a regularizing factor in such cases.
+
+4. **Probabilistic Insights**:
+   - Posterior distributions provide credible intervals, which are more intuitive than frequentist confidence intervals. For example, a 95% credible interval for \( \beta_{\text{organic}} \) of \([0.5, 1.5]\) means there is a 95% probability that the organic premium lies within this range.
+
+#### Expected Results
+
+1. **Vendor-Specific Strategies**:
+   - The model will estimate vendor-specific coefficients (\( \beta_{\text{vendor}} \)) to reveal pricing differences among suppliers.
+   - For example, some vendors may consistently charge higher prices due to branding or location.
+
+2. **Organic Premium**:
+   - The coefficient \( \beta_{\text{organic}} \) is expected to be positive, quantifying the price premium for organic strawberries.
+
+3. **Effect of Sales**:
+   - The coefficient \( \beta_{\text{sale}} \) is expected to be negative, reflecting price reductions during sales promotions.
+
+4. **Temporal Trends**:
+   - The coefficient \( \beta_{\text{date}} \) will capture seasonal or long-term trends in strawberry pricing, identifying high-demand periods or price fluctuations.
+
+
+The Bayesian linear regression model provides a robust framework for understanding strawberry pricing dynamics in the Canadian market. By including predictors such as vendor, organic status, sale status, and date, the model captures both individual and combined effects on pricing. Its ability to quantify uncertainty, incorporate prior knowledge, and analyze temporal trends makes it a valuable tool for uncovering actionable insights in strawberry pricing strategies and market dynamics.
 
 
 # Results
@@ -334,9 +394,15 @@ modelsummary::modelsummary(
 
 If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
 
-## Second discussion point
+## Limitations of the Bayesian Linear Regression Model
 
-Please don't use these as sub-heading labels - change them to be what your point actually is.
+The Bayesian linear regression model provides a robust framework for analyzing strawberry pricing, but it comes with limitations that should be acknowledged. One key assumption is linearity, which may not capture non-linear or cyclical patterns in the data, such as seasonal trends or interactions between predictors like vendor and sale status. While interaction terms or polynomial extensions can address this, more flexible models such as generalized additive models (GAMs) may be better suited for highly non-linear relationships.
+
+The model’s reliance on priors is both a strength and a challenge. Informative priors can stabilize estimates, particularly in cases of sparse data, but overly strong or poorly chosen priors can bias results. Sensitivity analysis and careful prior selection, ideally informed by domain knowledge, are essential to mitigate this risk. Furthermore, Bayesian methods are computationally demanding compared to traditional linear regression, particularly with large datasets or complex models. Approximation techniques like variational inference can alleviate computational strain, but they may compromise accuracy.
+
+Data quality also significantly impacts the model's reliability. Missing, sparse, or erroneous data can lead to biased estimates, particularly for categorical variables like vendor or binary predictors like sale status. Effective preprocessing and regularization through priors are necessary to handle these issues. Additionally, while posterior distributions provide nuanced probabilistic insights, their interpretation can be challenging for non-experts. Visualizations and clear communication are critical to ensure that stakeholders correctly understand the results.
+
+Finally, the model assumes residuals are independent and identically distributed (IID) and normally distributed, which may not hold for temporal data prone to autocorrelation or heteroscedasticity. Robust adjustments or time-series-specific Bayesian models can address these issues. The model also struggles with scalability as complexity increases and is poorly suited for extrapolation beyond observed data. Recognizing these limitations and employing strategies like simplifying the model, monitoring diagnostics, or focusing on interpolation within observed ranges ensures more reliable and actionable insights.
 
 ## Third discussion point
 

@@ -12,32 +12,24 @@
 library(tidyverse)
 library(janitor)
 
-#### Clean data ####
+#### Read data ####
 raw_data <- read_csv("data/01-raw_data/raw_data.csv") # Read in the raw data
 
-cleaned_data <-
-  raw_data |>
-  janitor::clean_names() |> # Clean column names for consistency
-  select(vendor, price_per_lb, organic, sale, date) |> # Select relevant columns
-  filter(price_per_lb > 0) |> # Remove rows with non-positive prices
-  mutate(
-    organic = if_else(organic %in% c("Yes", "No"), organic, NA_character_), # Validate organic field
-    sale = if_else(sale %in% c("On Sale", "Not on Sale"), sale, NA_character_), # Validate sale field
-    date = as.Date(date) # Convert date to proper date format
-  ) |>
-  drop_na() |> # Drop rows with missing values
-  rename(
-    vendor_name = vendor,
-    price = price_per_lb,
-    is_organic = organic,
-    sale_status = sale,
-    observation_date = date
-  )
+#### Clean data ####
+# Clean column names and assign to a new variable
+raw_data_cleaned <- raw_data |> janitor::clean_names()
+
+# Inspect column names
+print(colnames(raw_data_cleaned))
+
+# Proceed with data cleaning using the correct column names
+#cleaned_data <-
+  raw_data_cleaned |>
+    head()
 
 #### Save data ####
 write_csv(cleaned_data, "data/02-analysis_data/analysis_data.csv")
 
 #### Inspect cleaned data ####
 print(head(cleaned_data))
-
 

@@ -1,0 +1,90 @@
+#### Preamble ####
+# Purpose: Test the simulated data
+# Author: Tianning He
+# Date: 25 November 2024
+# Contact: tianning.he@utoronto.ca
+# License: MIT
+# Pre-requisites: Simulate the Canadian Grocery Price Data
+# Any other information needed? N/A
+
+
+#### Workspace setup ####
+library(tidyverse)
+
+# Load the simulated data
+strawberry_data <- read_csv("data/00-simulated_data/simulated_data.csv")
+
+# Test if the data was successfully loaded
+if (exists("strawberry_data")) {
+  message("Test Passed: The dataset was successfully loaded.")
+} else {
+  stop("Test Failed: The dataset could not be loaded.")
+}
+
+#### Test data ####
+
+# Check if the dataset has 200 rows
+if (nrow(strawberry_data) == 200) {
+  message("Test Passed: The dataset has 200 rows.")
+} else {
+  stop("Test Failed: The dataset does not have 200 rows.")
+}
+
+# Check if the dataset has 5 columns
+if (ncol(strawberry_data) == 5) {
+  message("Test Passed: The dataset has 5 columns.")
+} else {
+  stop("Test Failed: The dataset does not have 5 columns.")
+}
+
+# Check if the 'vendor' column contains only valid vendor names
+valid_vendors <- c("Voila", "T&T", "Loblaws", "No Frills", "Metro", "Galleria", "Walmart", "Save-On-Foods")
+
+if (all(strawberry_data$vendor %in% valid_vendors)) {
+  message("Test Passed: The 'vendor' column contains only valid vendor names.")
+} else {
+  stop("Test Failed: The 'vendor' column contains invalid vendor names.")
+}
+
+# Check if the 'price_per_lb' column has values within a reasonable range
+if (all(strawberry_data$price_per_lb >= 2 & strawberry_data$price_per_lb <= 5)) {
+  message("Test Passed: All 'price_per_lb' values are within the expected range ($2-$5).")
+} else {
+  stop("Test Failed: Some 'price_per_lb' values are outside the expected range ($2-$5).")
+}
+
+# Check if the 'organic' column contains only 'Yes' or 'No'
+if (all(strawberry_data$organic %in% c("Yes", "No"))) {
+  message("Test Passed: The 'organic' column contains only 'Yes' or 'No'.")
+} else {
+  stop("Test Failed: The 'organic' column contains invalid values.")
+}
+
+# Check if the 'sale' column contains only 'On Sale' or 'Not on Sale'
+if (all(strawberry_data$sale %in% c("On Sale", "Not on Sale"))) {
+  message("Test Passed: The 'sale' column contains only 'On Sale' or 'Not on Sale'.")
+} else {
+  stop("Test Failed: The 'sale' column contains invalid values.")
+}
+
+# Check if the 'date' column contains valid dates
+if (all(!is.na(as.Date(strawberry_data$date)))) {
+  message("Test Passed: All values in the 'date' column are valid dates.")
+} else {
+  stop("Test Failed: The 'date' column contains invalid dates.")
+}
+
+# Check if there are any missing values in the dataset
+if (all(!is.na(strawberry_data))) {
+  message("Test Passed: The dataset contains no missing values.")
+} else {
+  stop("Test Failed: The dataset contains missing values.")
+}
+
+# Check if the 'vendor' column has at least two unique values
+if (n_distinct(strawberry_data$vendor) >= 2) {
+  message("Test Passed: The 'vendor' column contains at least two unique values.")
+} else {
+  stop("Test Failed: The 'vendor' column contains less than two unique values.")
+}
+
