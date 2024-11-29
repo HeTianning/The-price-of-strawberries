@@ -3,7 +3,7 @@
     "path": "~/Desktop/The-price-of-strawberries/scripts/05-exploratory_data_analysis.R",
     "project_path": "scripts/05-exploratory_data_analysis.R",
     "type": "r_source",
-    "hash": "2881599874",
+    "hash": "903640122",
     "contents": "",
     "dirty": false,
     "created": 1732812110846.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "28,0",
-        "scrollLine": "19"
+        "cursorPosition": "73,17",
+        "scrollLine": "55"
     },
     "folds": "",
-    "lastKnownWriteTime": 1732904525,
+    "lastKnownWriteTime": 1732907116,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1732904525965,
+    "last_content_update": 1732907116682,
     "read_only": false,
     "read_only_alternatives": []
 }
