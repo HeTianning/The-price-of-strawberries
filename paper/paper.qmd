@@ -65,26 +65,6 @@ Finally, date is a temporal variable that records the observation date, enabling
 #| label: tbl-rawdata
 #| tbl-cap: "Paramedic Services Incident Data for 2022" 
 
-data <- read_csv(here::here("data/01-raw_data/raw_data.csv"))
-
-# Filter for strawberry-related products
-strawberry_data <- data %>%
-  filter(str_detect(product_name, regex("strawberry", ignore_case = TRUE))) %>%
-  select(vendor, product_name, price_per_lb, organic, sale, units, date)
-
-# Display a sample of the strawberry data
-strawberry_data %>%
-  slice(1:5) %>%  # Display the first 5 rows for simplicity
-  kable(
-    col.names = c("Vendor", "Product Name", "Price Per Pound", "Organic", 
-                  "Sale", "Units", "Date"),
-    digits = 2,
-    booktabs = TRUE,
-    linesep = "",
-    align = c("l", "l", "r", "l", "l", "l", "l"),
-    format.args = list(big.mark = ","),
-    caption = "Sample Strawberry Data"
-  )
 
 ```
 
@@ -108,13 +88,7 @@ Some of our data is of penguins (@fig-bills), from @palmerpenguins.
 #| fig-cap: Distribution of Prices
 #| echo: false
 
-ggplot(strawberry_data, aes(x = price_per_lb)) +
-  geom_histogram(binwidth = 0.2, fill = "skyblue", color = "black") +
-  labs(
-    x = "Price Per Pound (CAD)",
-    y = "Frequency"
-  ) +
-  theme_minimal()
+
 ```
 
 Talk more about it.
@@ -128,17 +102,7 @@ And also planes (@fig-planes). (You can change the height and width, but don't w
 #| warning: false
 #| message: false
 
-analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
 
-analysis_data |> 
-  ggplot(strawberry_data, aes(x = vendor, y = price_per_lb, fill = vendor)) +
-  geom_boxplot() +
-  labs(
-    x = "Vendor",
-    y = "Price Per Pound (CAD)"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 Talk way more about it. 
@@ -149,16 +113,7 @@ Talk way more about it.
 #| warning: false
 #| message: false
 
-analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
 
-analysis_data |> 
-  ggplot(strawberry_data, aes(x = organic, y = price_per_lb, fill = organic)) +
-  geom_boxplot() +
-  labs(
-    x = "Organic Status",
-    y = "Price Per Pound (CAD)"
-  ) +
-  theme_minimal()
 
 ```
 
@@ -169,16 +124,6 @@ analysis_data |>
 #| warning: false
 #| message: false
 
-analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
-
-analysis_data |> 
-  ggplot(strawberry_data, aes(x = sale, y = price_per_lb, fill = sale)) +
-  geom_boxplot() +
-  labs(
-    x = "Sale Status",
-    y = "Price Per Pound (CAD)"
-  ) +
-  theme_minimal()
 
 ```
 
@@ -189,22 +134,7 @@ analysis_data |>
 #| warning: false
 #| message: false
 
-price_trend <- strawberry_data %>%
-  group_by(date) %>%
-  summarise(avg_price = mean(price_per_lb, na.rm = TRUE))
 
-analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
-
-analysis_data |> 
-  ggplot(price_trend, aes(x = date, y = avg_price)) +
-  geom_line(color = "blue") +
-  geom_point(color = "red") +
-  labs(
-    title = "Strawberry Prices Over Time",
-    x = "Date",
-    y = "Average Price (CAD)"
-  ) +
-  theme_minimal()
 
 ```
 
@@ -234,17 +164,7 @@ To explore the combined effects of time, vendors, organic labeling, and sale sta
 #| warning: false
 #| message: false
 
-analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
 
-analysis_data |> 
-  ggplot(strawberry_data, aes(x = date, y = price_per_lb, color = vendor)) +
-  geom_line() +
-  labs(
-    x = "Date",
-    y = "Price Per Pound (CAD)",
-    color = "Vendor"
-  ) +
-  theme_minimal()
 
 ```
 

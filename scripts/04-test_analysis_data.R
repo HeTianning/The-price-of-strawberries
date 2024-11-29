@@ -9,84 +9,49 @@
 
 
 #### Workspace setup ####
-library(tidyverse)
 library(testthat)
 library(arrow)
-library(here)
 
 # Load the simulated data
-strawberry_data <- read_csv("data/02-analysis_data/analysis_data.csv")
+analysis_data <- read_parquet("data/02-analysis_data/analysis_data.parquet")
 
 # Test if the data was successfully loaded
-if (exists("strawberry_data")) {
-  message("Test Passed: The dataset was successfully loaded.")
-} else {
-  stop("Test Failed: The dataset could not be loaded.")
-}
+test_that("Dataset is successfully loaded", {
+  expect_true(exists("analysis_data"), info = "The dataset could not be loaded.")
+})
 
-#### Test data ####
+# Test if the dataset has 44854 rows
+test_that("Dataset has the correct number of rows", {
+  expect_equal(nrow(analysis_data), 44854, info = "The dataset does not have 44854 rows.")
+})
 
-# Check if the dataset has 200 rows
-if (nrow(strawberry_data) == 200) {
-  message("Test Passed: The dataset has 200 rows.")
-} else {
-  stop("Test Failed: The dataset does not have 200 rows.")
-}
+# Test if the dataset has 4 columns
+test_that("Dataset has the correct number of columns", {
+  expect_equal(ncol(analysis_data), 4, info = "The dataset does not have 4 columns.")
+})
 
-# Check if the dataset has 5 columns
-if (ncol(strawberry_data) == 5) {
-  message("Test Passed: The dataset has 5 columns.")
-} else {
-  stop("Test Failed: The dataset does not have 5 columns.")
-}
+# Test if the 'vendor' column contains only valid vendor names
+test_that("'vendor' column contains only valid values", {
+  valid_vendors <- c("Voila", "TandT", "Loblaws", "NoFrills", "Metro", "Galleria", "Walmart", "SaveOnFoods")
+  expect_true(all(analysis_data$vendor %in% valid_vendors), 
+              info = "The 'vendor' column contains invalid vendor names.")
+})
 
-# Check if the 'vendor' column contains only valid vendor names
-valid_vendors <- c("Voila", "T&T", "Loblaws", "No Frills", "Metro", "Galleria", "Walmart", "Save-On-Foods")
+# Test that the 'current_price' and 'old_price' columns are numeric types
+test_that("'current_price' and 'old_price' are numeric", {
+  expect_type(analysis_data$current_price, "double")
+  expect_type(analysis_data$old_price, "double")
+})
 
-if (all(strawberry_data$vendor %in% valid_vendors)) {
-  message("Test Passed: The 'vendor' column contains only valid vendor names.")
-} else {
-  stop("Test Failed: The 'vendor' column contains invalid vendor names.")
-}
+# Test that the 'month' column contains values from 1 to 12
+test_that("'month' column contains valid month values", {
+  expect_true(all(analysis_data$month %in% 1:12), 
+              info = "The 'month' column contains values outside the range 1 to 12.")
+})
 
-# Check if the 'price_per_lb' column has values within a reasonable range
-if (all(strawberry_data$price_per_lb >= 2 & strawberry_data$price_per_lb <= 5)) {
-  message("Test Passed: All 'price_per_lb' values are within the expected range ($2-$5).")
-} else {
-  stop("Test Failed: Some 'price_per_lb' values are outside the expected range ($2-$5).")
-}
+# Test to check for missing values in the dataset
+test_that("Dataset has no missing values", {
+  expect_true(all(!is.na(analysis_data)), 
+              info = "The dataset contains missing values.")
+})
 
-# Check if the 'organic' column contains only 'Yes' or 'No'
-if (all(strawberry_data$organic %in% c("Yes", "No"))) {
-  message("Test Passed: The 'organic' column contains only 'Yes' or 'No'.")
-} else {
-  stop("Test Failed: The 'organic' column contains invalid values.")
-}
-
-# Check if the 'sale' column contains only 'On Sale' or 'Not on Sale'
-if (all(strawberry_data$sale %in% c("On Sale", "Not on Sale"))) {
-  message("Test Passed: The 'sale' column contains only 'On Sale' or 'Not on Sale'.")
-} else {
-  stop("Test Failed: The 'sale' column contains invalid values.")
-}
-
-# Check if the 'date' column contains valid dates
-if (all(!is.na(as.Date(strawberry_data$date)))) {
-  message("Test Passed: All values in the 'date' column are valid dates.")
-} else {
-  stop("Test Failed: The 'date' column contains invalid dates.")
-}
-
-# Check if there are any missing values in the dataset
-if (all(!is.na(strawberry_data))) {
-  message("Test Passed: The dataset contains no missing values.")
-} else {
-  stop("Test Failed: The dataset contains missing values.")
-}
-
-# Check if the 'vendor' column has at least two unique values
-if (n_distinct(strawberry_data$vendor) >= 2) {
-  message("Test Passed: The 'vendor' column contains at least two unique values.")
-} else {
-  stop("Test Failed: The 'vendor' column contains less than two unique values.")
-}

@@ -13,25 +13,26 @@ library(tidyverse)
 library(rstanarm)
 
 #### Read data ####
-analysis_data <- read_csv("data/analysis_data/analysis_data.csv")
+analysis_data <- read_parquet("data/analysis_data/analysis_data.parquet")
 
-### Model data ####
-first_model <-
-  stan_glm(
-    formula = flying_time ~ length + width,
-    data = analysis_data,
-    family = gaussian(),
-    prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
-    prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
-    prior_aux = exponential(rate = 1, autoscale = TRUE),
-    seed = 853
-  )
+#### Draw graph ####
+library(ggplot2)
 
+ggplot(analysis_data, aes(x = current_price)) +
+  geom_histogram(binwidth = 0.5, fill = "skyblue", color = "black") +
+  labs(
+    title = "Distribution of Current Prices",
+    x = "Current Price (CAD)",
+    y = "Frequency"
+  ) +
+  theme_minimal()
 
-#### Save model ####
-saveRDS(
-  first_model,
-  file = "models/first_model.rds"
-)
-
-
+ggplot(analysis_data, aes(x = vendor, y = current_price, fill = vendor)) +
+  stat_summary(fun = "mean", geom = "bar", color = "black") +
+  labs(
+    title = "Average Current Price by Vendor",
+    x = "Vendor",
+    y = "Average Current Price (CAD)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))

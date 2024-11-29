@@ -1,2 +1,0 @@
-[1,"==> quarto preview paper.qmd --to pdf --no-watch-inputs --no-browse\n\n"]
-[1,"\u001B[91mERROR: YAMLException: bad indentation of a mapping entry (paper.qmd, 147:29)\n146: \u001B[34m#| label: fig-organic\u001B[91m\n147: \u001B[34m#| fig-cap: Price Comparison: Organic vs Non-Organic\u001B[91m\n                                ~~\n148: \u001B[34m#| echo: false\u001B[91m\u001B[39m\n"]

@@ -13,12 +13,12 @@ library(tidyverse)
 library(rstanarm)
 
 #### Read data ####
-analysis_data <- read_csv("data/02-analysis_data/analysis_data.csv")
+analysis_data <- read_parquet("data/02-analysis_data/analysis_data.parquet")
 
 # Set up the regression model for vendor comparison
 vendor_price_model <- stan_glm(
-  formula = price_per_lb ~ vendor + organic + sale + date, # Include date as a predictor
-  data = clean_data,
+  formula = current_price ~ vendor + month + old_price, # Include date as a predictor
+  data = analysis_data,
   family = gaussian(), # Continuous outcome (price per pound)
   prior = normal(location = 0, scale = 2.5, autoscale = TRUE), # Priors for coefficients
   prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE), # Prior for intercept

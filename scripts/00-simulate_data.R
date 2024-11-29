@@ -16,29 +16,14 @@ set.seed(112)
 
 #### Simulate data ####
 # Define vendors
-vendors <- c("Voila", "T&T", "Loblaws", "No Frills", "Metro", "Galleria", "Walmart", "Save-On-Foods")
+vendors <- c("Voila", "TandT", "Loblaws", "NoFrills", "Metro", "Galleria", "Walmart", "SaveOnFoods")
 
 # Simulate strawberry price data
 simulated_data <- tibble(
   vendor = sample(vendors, size = 200, replace = TRUE), # 200 observations across 8 vendors
-  price_per_lb = round(rnorm(200, mean = 3.5, sd = 0.5), 2), # Prices centered at $3.50 per lb
-  organic = sample(
-    c("Yes", "No"),
-    size = 200,
-    replace = TRUE,
-    prob = c(0.4, 0.6) # Organic: 40%, Non-organic: 60%
-  ),
-  sale = sample(
-    c("On Sale", "Not on Sale"),
-    size = 200,
-    replace = TRUE,
-    prob = c(0.3, 0.7) # Sales occur 30% of the time
-  ),
-  date = sample(
-    seq(as.Date("2024-02-28"), Sys.Date(), by = "day"), # Dates from Feb 28, 2024, to today
-    size = 200,
-    replace = TRUE
-  )
+  month = sample(1:12, size = 200, replace = TRUE),
+  current_price = round(runif(200,2,6),2),
+  old_price = round(runif(200,2,6),2)
 )
 
 #### Save data ####

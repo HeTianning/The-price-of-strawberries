@@ -12,24 +12,30 @@
 library(tidyverse)
 library(janitor)
 
-#### Read data ####
-raw_data <- read_csv("data/01-raw_data/raw_data.csv") # Read in the raw data
+# Load raw data
+raw_data <- read_csv("data/01-raw_data/hammer-4-raw.csv")
+product_data <- read_csv("data/01-raw_data/hammer-4-product.csv")
 
-#### Clean data ####
-# Clean column names and assign to a new variable
-raw_data_cleaned <- raw_data |> janitor::clean_names()
+# Join raw data with product data
+merged_data <- raw_data %>%
+  left_join(product_data, by = c("product_id" = "id")) %>%
+  filter(!is.na(product_id)) %>%
+  rename(timestamp = nowtime)
 
-# Inspect column names
-print(colnames(raw_data_cleaned))
-
-# Proceed with data cleaning using the correct column names
-#cleaned_data <-
-  raw_data_cleaned |>
-    head()
+# Select and clean relevant columns
+filtered_data <- merged_data %>%
+  filter(str_detect(tolower(product_name), "strawberr")) %>%
+  mutate(
+    current_price = as.numeric(str_replace_all(current_price, "[^0-9.]", "")),
+    old_price = as.numeric(str_replace_all(old_price, "[^0-9.]", "")),
+    month = lubridate::month(timestamp)
+  ) %>%
+  select(vendor, current_price, old_price, month) %>%
+  drop_na()
 
 #### Save data ####
-write_csv(cleaned_data, "data/02-analysis_data/analysis_data.csv")
+write_parquet(filtered_data, "data/02-analysis_data/analysis_data.parquet")
 
 #### Inspect cleaned data ####
-print(head(cleaned_data))
+print(head(filtered_data))
 
