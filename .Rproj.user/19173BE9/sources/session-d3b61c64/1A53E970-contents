@@ -372,6 +372,11 @@ Model performance metrics confirm the model's validity, with $R^2$ and adjusted 
 These findings have actionable implications for both vendors and consumers. Vendors like Metro can continue emphasizing quality to justify their premium pricing, while budget vendors such as Save-On-Foods may explore targeted promotions to enhance their appeal. Consumers seeking affordability may benefit from shopping at vendors like No Frills, whereas quality-focused shoppers may prefer Metro despite its higher prices. Future research could incorporate additional predictors, such as organic labeling or sale status, to refine the understanding of strawberry pricing dynamics in the Canadian market.
 
 ```{r}
+#| label: fig-CI
+#| fig-cap: Posterior Credible Intervals for Model Parameters
+#| echo: false
+#| warning: false
+#| message: false
 # Extract posterior draws
 posterior_draws <- as.matrix(vendor_price_model)
 
@@ -384,10 +389,17 @@ mcmc_intervals(
   prob = 0.95,  # 95% credible interval
   prob_outer = 0.95  # 95% outer credible interval
 ) +
-  ggtitle("Posterior Credible Intervals for Model Parameters") +
   xlab("Parameter Estimate")
 ```
+In this graph(@fig-CI), the posterior credible intervals for the Bayesian linear regression model highlight significant differences in strawberry pricing across vendors, seasonal trends, and the influence of original prices. Metro stands out with a clear positive effect, indicating its significantly higher prices compared to the reference vendor, consistent with its premium market positioning. In contrast, budget vendors like Save-On-Foods and No Frills exhibit negative effects, suggesting lower pricing strategies, while other vendors show smaller and more uncertain deviations. The positive, albeit modest, effect of `month` suggests a slight upward trend in prices over time, likely due to seasonal demand or inflation. The strong and precise relationship between `old_price` and `current_price` underscores the proportionality of promotional pricing strategies, where discounts often maintain the hierarchy of original prices. Together, these findings reveal actionable insights into vendor-specific pricing strategies, temporal trends, and the importance of original prices in shaping strawberry pricing dynamics.
+
+
 ```{r}
+#| label: fig-posterior
+#| fig-cap: Posterior Distribution Histograms for Vendors and Other Parameters
+#| echo: false
+#| warning: false
+#| message: false
 # Extract posterior samples
 posterior_draws <- as.matrix(vendor_price_model)
 
@@ -399,9 +411,9 @@ mcmc_hist(
            "vendorSaveOnFoods", "vendorTandT", "vendorVoila", "vendorWalmart", 
            "month", "old_price")
 ) +
-  ggtitle("Posterior Distribution Histograms for Vendors and Other Parameters") +
   xlab("Parameter Estimate")
 ```
+In this graph(@fig-posterior),the posterior distribution histograms illustrate the variability in vendor pricing strategies, temporal trends, and the influence of original prices on current strawberry pricing. Metro’s distribution is distinctly centered around a high positive value, confirming its premium pricing strategy compared to the reference vendor. In contrast, budget vendors like Save-On-Foods and No Frills show distributions predominantly in the negative range, highlighting their focus on affordability. The parameter for `month` exhibits a narrow distribution slightly above zero, indicating a modest upward trend in prices over time, likely driven by seasonal fluctuations or inflation. The tightly concentrated posterior for `old_price` underscores its strong and consistent influence on current prices, with higher original prices maintaining a proportional relationship with final prices. These results emphasize the diverse pricing strategies across vendors and the critical role of baseline prices in shaping market dynamics.
 
 # Discussion
 
@@ -409,21 +421,22 @@ mcmc_hist(
 
 If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
 
-## Limitations of the Bayesian Linear Regression Model
+## Second discussion point
 
-The Bayesian linear regression model provides a robust framework for analyzing strawberry pricing, but it comes with limitations that should be acknowledged. One key assumption is linearity, which may not capture non-linear or cyclical patterns in the data, such as seasonal trends or interactions between predictors like vendor and sale status. While interaction terms or polynomial extensions can address this, more flexible models such as generalized additive models (GAMs) may be better suited for highly non-linear relationships.
-
-The model’s reliance on priors is both a strength and a challenge. Informative priors can stabilize estimates, particularly in cases of sparse data, but overly strong or poorly chosen priors can bias results. Sensitivity analysis and careful prior selection, ideally informed by domain knowledge, are essential to mitigate this risk. Furthermore, Bayesian methods are computationally demanding compared to traditional linear regression, particularly with large datasets or complex models. Approximation techniques like variational inference can alleviate computational strain, but they may compromise accuracy.
-
-Data quality also significantly impacts the model's reliability. Missing, sparse, or erroneous data can lead to biased estimates, particularly for categorical variables like vendor or binary predictors like sale status. Effective preprocessing and regularization through priors are necessary to handle these issues. Additionally, while posterior distributions provide nuanced probabilistic insights, their interpretation can be challenging for non-experts. Visualizations and clear communication are critical to ensure that stakeholders correctly understand the results.
-
-Finally, the model assumes residuals are independent and identically distributed (IID) and normally distributed, which may not hold for temporal data prone to autocorrelation or heteroscedasticity. Robust adjustments or time-series-specific Bayesian models can address these issues. The model also struggles with scalability as complexity increases and is poorly suited for extrapolation beyond observed data. Recognizing these limitations and employing strategies like simplifying the model, monitoring diagnostics, or focusing on interpolation within observed ranges ensures more reliable and actionable insights.
 
 ## Third discussion point
 
 ## Weaknesses and next steps
 
-Weaknesses and next steps should also be included.
+The Bayesian linear regression model offers a robust framework for analyzing strawberry pricing but has notable limitations. One key assumption is linearity, which may fail to capture non-linear or cyclical patterns in the data, such as seasonal trends or interactions between predictors like vendor and sale status. While interaction terms or polynomial extensions can partially address this, more flexible approaches like generalized additive models (GAMs) or Bayesian hierarchical models may be better suited for complex relationships. Additionally, the assumption of independent and identically distributed (IID) residuals may not hold for temporal data prone to autocorrelation or heteroscedasticity. Time-series-specific Bayesian models or robust adjustments can help address these issues.
+
+The reliance on priors is both a strength and a challenge. Informative priors can stabilize estimates, especially with sparse data, but poorly chosen priors risk biasing results. Sensitivity analysis and informed prior selection are crucial to minimize this risk. Computational demands are another limitation, as Bayesian methods like Markov Chain Monte Carlo (MCMC) can be slow, especially with large datasets. Approximation techniques like variational inference can improve speed but may compromise precision.
+
+Data quality is also critical. Missing, sparse, or erroneous data can distort results, particularly for categorical variables like vendor. Preprocessing steps such as imputation, regularization, and careful data cleaning are essential to improve reliability. Additionally, while posterior distributions provide nuanced probabilistic insights, they can be challenging for non-experts to interpret. Clear communication using visualizations and simplified summaries is necessary to make findings actionable.
+
+Lastly, the model struggles with scalability and extrapolation. Predictions outside the observed data, such as for new vendors or regions, require additional data and recalibration. The model is best suited for interpolation within the existing dataset and should be supplemented with external validation datasets when expanding the analysis.
+
+Future work can address these limitations by incorporating non-linear models such as GAMs or Bayesian splines to better capture complex relationships. Time-series Bayesian models can help address temporal autocorrelation and seasonal trends. Expanding the dataset temporally and across more vendors would enhance generalizability. Routine sensitivity analyses and testing alternative priors can ensure robust and unbiased results. Finally, improving stakeholder communication through intuitive visualizations and collaboration with domain experts will ensure that findings are both interpretable and actionable. These steps will strengthen the Bayesian framework’s ability to provide reliable insights into strawberry pricing strategies.
 
 \newpage
 
