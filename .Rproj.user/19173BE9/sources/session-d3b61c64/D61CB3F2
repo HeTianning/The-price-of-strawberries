@@ -1,26 +1,26 @@
 {
-    "id": "6C1762FD",
+    "id": "D61CB3F2",
     "path": "~/Desktop/The-price-of-strawberries/scripts/06-model_data.R",
     "project_path": "scripts/06-model_data.R",
     "type": "r_source",
     "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1732775611312.0,
+    "created": 1732938462855.0,
     "source_on_save": false,
     "relative_order": 3,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "34,0",
-        "scrollLine": "18"
+        "cursorPosition": "27,0",
+        "scrollLine": "8"
     },
     "folds": "",
     "lastKnownWriteTime": 1732904494,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1732904494774,
+    "last_content_update": 1732904494,
     "read_only": false,
     "read_only_alternatives": []
 }

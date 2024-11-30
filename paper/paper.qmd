@@ -25,6 +25,8 @@ library(dplyr)
 library(arrow)
 library(here)
 library(modelsummary)
+library(bayesplot)
+library(rstanarm)
 ```
 
 
@@ -53,109 +55,125 @@ For this analysis, the eight vendors - Voila, T&T, Loblaws, No Frills, Metro, Ga
 
 ## Measurement
 	
-The data captures strawberry pricing through a structured set of variables, ensuring a comprehensive analysis of supplier-based differences. The primary variable of interest, price_per_lb, is a continuous measure representing the price of strawberries per pound in Canadian dollars. This variable reflects vendor-specific pricing strategies and serves as the dependent variable in the analysis.
+The dataset captures strawberry pricing using structured variables that provide a comprehensive basis for analyzing supplier-specific pricing strategies and seasonal trends. The primary variable of interest is current_price, a continuous measure representing the current price of strawberries in Canadian dollars. This variable serves as the dependent variable in the analysis and reflects the vendors’ updated or promotional pricing.
 
-Additional explanatory variables include vendor, a categorical variable indicating one of eight suppliers (Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart, and Save-On-Foods), and organic, a binary variable where "Yes" denotes organic strawberries and "No" represents non-organic ones. The sale variable is also binary, capturing whether the strawberries were on sale ("On Sale") or not ("Not on Sale").
+An additional variable, old_price, is another continuous measure representing the original price of strawberries before discounts or promotional adjustments. The difference between old_price and current_price can be calculated to assess the magnitude of price reductions, providing insights into sales promotions, markdown strategies, or vendor-specific pricing policies. Both current_price and old_price are essential for understanding vendor behavior and the dynamics of pricing over time.
 
-Finally, date is a temporal variable that records the observation date, enabling the study of potential seasonal trends or temporal price fluctuations. Together, these measurements allow for a detailed assessment of how strawberry prices are influenced by vendor identity, product attributes, and sales promotions, providing both granular and aggregate insights into the Canadian strawberry market.
+The dataset also includes vendor, a categorical variable identifying one of eight suppliers (Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart, and Save-On-Foods). This variable is crucial for comparing pricing strategies across vendors and identifying patterns or outliers within the market.
+
+The month variable is a numeric measure that records the month of observation, enabling the analysis of seasonal trends and price fluctuations over time. By combining month with pricing data, the dataset facilitates the exploration of how factors like demand, supply, and promotions vary throughout the year.
+
+Together, these variables enable a granular and aggregate analysis of strawberry pricing in the Canadian market. The dataset allows us to examine the relationship between current and old prices, evaluate vendor-specific strategies, and uncover seasonal patterns, providing actionable insights for both consumers and suppliers.
 
 ```{r}
 #| echo: false
 #| message: false
-#| label: tbl-rawdata
-#| tbl-cap: "Paramedic Services Incident Data for 2022" 
+#| label: tbl-data
+#| tbl-cap: "Sample of the Dataset" 
+# Display the first 10 rows of the dataset in a formatted table
+col_names <- colnames(analysis_data)
 
+# Display the first 10 rows of the dataset in a formatted table
+analysis_data %>%
+  head(10) %>%  # Select the first 10 rows
+  kable(
+    col.names = col_names, # Dynamically use the dataset's column names
+    caption = "Table 1: Sample of the Dataset",
+    digits = 2, # Format numeric columns to 2 decimal places
+    format = "html", # Output format
+    align = c("l", "r", "r", "c") # Align columns
+  )
 
 ```
 
 ## Outcome variables
 
-The primary outcome variable in this study is price_per_lb, which represents the price of strawberries per pound, measured in Canadian dollars. This continuous variable serves as the dependent variable in the analysis and reflects the central focus of the study: understanding and comparing strawberry prices across different suppliers.
+The primary outcome variable in this study is current_price, which represents the current price of strawberries in Canadian dollars. This continuous variable serves as the dependent variable and captures the prices consumers pay at the point of purchase, reflecting vendor-specific pricing strategies and promotional adjustments. Additionally, old_price is included as a secondary outcome variable, representing the original price before any discounts. The relationship between these two variables highlights the frequency and magnitude of price reductions, offering insights into vendor markdown strategies.
 
-The variability in price_per_lb is analyzed concerning the following factors:
+The analysis focuses on understanding how current_price varies with factors such as vendor and month. The categorical variable vendor identifies the supplier and captures differences in pricing strategies across eight vendors, ranging from premium to budget-focused retailers. These variations help reveal how suppliers target different market segments through pricing. The numeric variable month enables the exploration of seasonal trends and temporal fluctuations, reflecting how supply and demand dynamics influence pricing throughout the year.
 
-Vendor (vendor): A categorical variable indicating the supplier, which is expected to influence pricing strategies.
-Organic Status (organic): A binary variable ("Yes" or "No") indicating whether the strawberries are organic, which typically commands a premium price.
-Sale Status (sale): A binary variable ("On Sale" or "Not on Sale") capturing promotional discounts, often associated with lower prices.
-By modeling the outcome variable, the study investigates how these factors interact to explain price differences among suppliers. The insights derived from this analysis highlight the dynamics of strawberry pricing in Canada’s retail market.
+By examining both current_price and old_price, the study provides a detailed view of promotional activity and vendor behavior. A significant gap between the two prices indicates aggressive promotional strategies, while minimal differences suggest stable pricing policies. Additionally, incorporating the month variable allows for insights into seasonal peaks or dips in strawberry prices, such as higher prices during off-seasons or lower prices during harvest months. Together, these variables offer a comprehensive understanding of strawberry pricing dynamics in Canada’s retail market, helping inform consumer choices and vendor pricing strategies.
 
 
 
 Some of our data is of penguins (@fig-bills), from @palmerpenguins.
 
 ```{r}
-#| label: fig-pricedistribution
-#| fig-cap: Distribution of Prices
+#| label: fig-currentpricebyvendor
+#| fig-cap: Average Current Price by Vendor
 #| echo: false
-
+ggplot(analysis_data, aes(x = vendor, y = current_price, fill = vendor)) +
+  stat_summary(fun = "mean", geom = "bar", color = "black") +
+  labs(
+    x = "Vendor",
+    y = "Average Current Price (CAD)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
 
-Talk more about it.
-
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
+The graph(@fig-currentpricebyvendor) illustrates the average current price of strawberries across various vendors, highlighting significant price variations. `Metro` stands out with the highest average price, indicating a focus on premium offerings or higher-quality products, while `No Frills` and `Save-On-Foods` have the lowest prices, appealing to cost-conscious shoppers. Vendors like `Loblaws`, `T&T`, and `Voila` fall into the mid-range pricing category, suggesting a balance between affordability and quality. These differences reflect distinct market strategies, with premium vendors targeting quality-focused consumers and budget-friendly vendors catering to price-sensitive customers. The data provides valuable insights for consumers to make informed purchasing decisions and for vendors to refine their pricing strategies to better compete in their respective market segments.
 
 ```{r}
-#| label: fig-vendor
-#| fig-cap: Price Distribution by Vendor
+#| label: fig-comparisonofprice
+#| fig-cap: Comparison of Current and Old Prices by Vendor
 #| echo: false
 #| warning: false
 #| message: false
-
+ggplot(analysis_data_long, aes(x = price_type, y = price, fill = price_type)) +
+  geom_boxplot() +
+  facet_wrap(~ vendor) +
+  labs(
+    x = "Price Type",
+    y = "Price (CAD)"
+  ) +
+  theme_minimal()
 
 ```
 
-Talk way more about it. 
+The graph(@fig-comparisonofprice) compares current and old strawberry prices across vendors, revealing significant price variability for `Metro` and `Walmart`, likely due to a diverse product range including premium options, while vendors like `No Frills` and `Save-On-Foods` maintain tight and predictable pricing, reflecting budget-friendly strategies. Outliers, particularly for `Metro` and `Walmart`, suggest the presence of specialty or organic products. The small differences between current and old prices across most vendors indicate either stable pricing strategies or limited promotional activity. These trends highlight distinct market positioning, with budget vendors appealing to cost-conscious shoppers and premium vendors catering to a broader or quality-focused market.
+
 ```{r}
-#| label: fig-organic
-#| fig-cap: Price Comparison: Organic vs Non-Organic
+#| label: fig-monthlytrend
+#| fig-cap: Monthly Trend of Current Prices by Vendor
 #| echo: false
 #| warning: false
 #| message: false
-
-
-
-```
-
-```{r}
-#| label: fig-sale
-#| fig-cap: Effect of Sale on Strawberry Prices
-#| echo: false
-#| warning: false
-#| message: false
+ggplot(analysis_data, aes(x = month, y = current_price, group = vendor, color = vendor)) +
+  stat_summary(fun = "mean", geom = "line", size = 1) +
+  geom_point(stat = "summary", fun = "mean", size = 2) +
+  labs(
+    x = "Month",
+    y = "Average Current Price (CAD)"
+  ) +
+  theme_minimal()
 
 
 ```
-
-```{r}
-#| label: fig-date
-#| fig-cap: Strawberry Prices Over Time
-#| echo: false
-#| warning: false
-#| message: false
-
-
-
-```
+This graph(@fig-monthlytrend) shows the monthly trend of average current strawberry prices across different vendors over several months. `Metro` consistently exhibits the highest prices, with noticeable fluctuations, peaking in mid-year, indicating potential seasonal effects or changes in supply and demand. In contrast, budget-friendly vendors like `No Frills` and `Save-On-Foods` maintain the lowest prices, demonstrating pricing stability aimed at cost-conscious consumers. Mid-range vendors such as `Loblaws`, `T&T`, and `Voila` show relatively stable but slightly variable trends, with occasional peaks suggesting targeted pricing adjustments. Overall, the graph highlights clear segmentation among vendors, with premium vendors like `Metro` adapting dynamically to market conditions, while budget vendors maintain consistent affordability. This trend could reflect differing business strategies to cater to diverse consumer preferences.
 
 
 ## Predictor variables
 
 Predictor Variables: Exploring Factors Influencing Strawberry Prices
 1. Vendor (vendor)
-The vendor variable is categorical, representing the supplier of strawberries. Different vendors employ varying pricing strategies, which are reflected in the distribution of price_per_lb. Vendors such as Galleria and T&T may target premium markets, resulting in higher median prices, while Walmart and No Frills tend to offer lower prices. The table summarizes average prices for each vendor, and the boxplot illustrates the variability in pricing.
+The vendor variable is categorical, identifying the supplier of strawberries. Each vendor employs unique pricing strategies, leading to significant variability in pricing across the eight vendors (Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart, and Save-On-Foods). Premium vendors like Metro and Galleria tend to target quality-conscious consumers, reflected in their higher average prices. In contrast, budget-oriented vendors like No Frills and Save-On-Foods maintain lower prices to attract cost-sensitive shoppers. The variability in pricing, shown through boxplots, highlights how vendor identity influences price distributions and captures the strategic segmentation of the Canadian strawberry market.
 
-2. Organic Status (organic)
-The organic variable is binary, indicating whether the strawberries are labeled as organic (Yes) or not (No). Organic strawberries typically command higher prices due to perceived quality and health benefits. The table summarizes average prices for organic and non-organic strawberries, and the boxplot highlights the significant price differences between these two categories.
+2. Original and Current Prices (old_price and current_price)
+The dataset includes two continuous price variables: old_price (original price) and current_price (price after any promotions or discounts). The difference between these two variables provides insights into promotional behavior and markdown strategies. Vendors like No Frills and Save-On-Foods typically show small gaps between old_price and current_price, suggesting limited use of deep discounts, whereas Metro and Walmart exhibit larger gaps, reflecting more aggressive promotional activity. Boxplots comparing old_price and current_price by vendor demonstrate how discounts influence consumer pricing perceptions and vendor competition.
 
-3. Sale Status (sale)
-The sale variable indicates whether the strawberries were on sale (On Sale) or not (Not on Sale). Promotions are a major driver of price reductions, and strawberries on sale consistently exhibit lower prices compared to regular-priced items. The table shows average prices by sale status, and the boxplot visually demonstrates the effect of sales on pricing.
+3. Month (month)
+The month variable is numeric, capturing the month of observation. Seasonal patterns play a crucial role in strawberry pricing, with supply and demand fluctuations driving price variability. For instance, prices may drop during peak harvest months and increase during off-season periods when strawberries are scarce. Line charts tracking average monthly prices show clear temporal trends, with peaks and dips aligning with these seasonal dynamics. By analyzing month in combination with other predictors, this variable helps uncover how vendors adjust pricing strategies to reflect seasonal demand and supply conditions.
 
-4. Time (date)
-The date variable is temporal, capturing the observation date for each price entry. Seasonal trends and time-based fluctuations are common in fresh produce pricing, including strawberries. By analyzing prices over time, we observe peaks and dips that may align with seasonal demand (e.g., summer months) or supply disruptions. The line chart below shows average prices across all vendors over time, while individual trends for each vendor reveal how pricing strategies change seasonally.
+4. Combined Factors: Vendor, Price, and Seasonality
+The interplay of vendor, old_price, current_price, and month allows for a more comprehensive analysis of pricing strategies. For example, vendors like Metro may use larger discounts (old_price vs. current_price) during peak seasons to maintain competitiveness, while budget vendors like No Frills may maintain consistent pricing throughout the year. A combined analysis using bar charts and line plots highlights how vendor strategies vary with time, providing insights into the dynamic nature of strawberry pricing.
 
-5. Combined Analysis: Vendor, Organic, Sale, and Time
-To explore the combined effects of time, vendors, organic labeling, and sale status on prices, the bar chart below shows average prices segmented by vendor, organic status, and sale status across time intervals. This analysis highlights the interplay of these factors in shaping pricing strategies.
+The inclusion of variables like vendor, old_price, current_price, and month enriches the analysis by offering multiple perspectives on pricing strategies. Vendor captures the segmentation of suppliers into premium and budget categories, reflecting strategic decisions about market positioning. The dual price variables (old_price and current_price) allow for a deeper understanding of promotional activity and highlight the extent to which vendors rely on discounts to influence consumer behavior.
+
+The addition of month introduces a temporal dimension, enabling the analysis of seasonal trends that are common in agricultural markets. Combining these predictors provides a holistic view of pricing dynamics, revealing how vendors adapt to seasonal supply fluctuations, consumer demand, and competitive pressures.
+
+By leveraging these predictor variables, the study offers actionable insights into how strawberry prices are shaped by market forces, vendor decisions, and seasonal trends. These findings are crucial for both consumers seeking to optimize purchases and vendors aiming to refine their pricing strategies to remain competitive.
 
 ```{r}
 #| label: fig-combined
@@ -177,21 +195,23 @@ To explore the combined effects of time, vendors, organic labeling, and sale sta
 
 ## Purpose of the Model
 
-The purpose of this model is to identify and quantify the factors that influence the price per pound of strawberries from different suppliers in Canada. The analysis evaluates how key predictors, such as supplier, organic label, sale status, and time, affect pricing. Specifically, the model aims to:
+The purpose of this model is to identify and quantify the factors influencing the current price of strawberries across various vendors in Canada. The analysis evaluates how key predictors, such as vendor, original price, month, and their interactions, affect pricing. Specifically, the model aims to:
 
-- Quantify the impact of each predictor (e.g., supplier, organic status, sale status, and time) on strawberry prices.
-- Compare pricing strategies across suppliers.
-- Analyze seasonal trends in strawberry prices and identify periods of high or low prices.
-- Provide actionable insights into pricing strategies and market dynamics.
+- Quantify the impact of each predictor (e.g., vendor, original price, and month) on strawberry prices.
+- Analyze how the gap between original (`old_price`) and discounted (`current_price`) prices varies across vendors.
+- Examine seasonal trends in strawberry prices to identify periods of high or low prices.
+- Provide actionable insights into vendor pricing strategies and market dynamics.
 ## Model Description
 
-The model chosen for this analysis is a **Bayesian linear regression model**. It builds upon the simplicity and interpretability of traditional linear regression but incorporates the Bayesian framework to provide more robust and probabilistic insights. 
+The chosen model is a **Bayesian linear regression model**, which builds on the simplicity of traditional linear regression while incorporating the Bayesian framework. This allows for probabilistic insights and robust uncertainty quantification, making it well-suited for analyzing the factors driving strawberry prices.
 
-The predictors in the model include:
-- **Vendor (`vendor`)**: A categorical variable representing the supplier.
-- **Organic Status (`organic`)**: A binary variable indicating whether the strawberries are organic.
-- **Sale Status (`sale`)**: A binary variable indicating whether the strawberries are on sale.
-- **Date (`date`)**: A time variable capturing potential seasonal or time-related trends.
+### Predictors in the Model
+
+- **Vendor (`vendor`)**: A categorical variable identifying the supplier of strawberries. Different vendors adopt distinct pricing strategies that influence strawberry prices.
+- **Original Price (`old_price`)**: A continuous variable representing the original price of strawberries before discounts or promotions. This variable reflects vendor-specific baseline pricing strategies.
+- **Month (`month`)**: A numeric variable capturing the observation month, enabling the analysis of seasonal trends and time-based fluctuations.
+- **Price Gap (`old_price - current_price`)**: A derived variable quantifying the magnitude of discounts or markdowns applied by vendors.
+
 
 
 
@@ -200,33 +220,36 @@ The predictors in the model include:
 The Bayesian linear regression model is expressed as:
 
 \[
-y_i = \beta_0 + \beta_{vendor[i]} + \beta_{organic} \cdot x_{organic[i]} + \beta_{sale} \cdot x_{sale[i]} + \beta_{date} \cdot x_{date[i]} + \epsilon_i
+y_i = \beta_0 + \beta_{\text{vendor}[i]} + \beta_{\text{old\_price}} \cdot x_{\text{old\_price}[i]} + \beta_{\text{month}} \cdot x_{\text{month}[i]} + \epsilon_i
 \]
 
 **Where**:
-- \( y_i \): Price per pound of strawberries for observation \( i \) (dependent variable).
-- \( \beta_0 \): Intercept, representing the baseline price (reference vendor, non-organic, not on sale, and earliest date).
-- \( \beta_{vendor[i]} \): Vendor-specific effect, indicating how each supplier’s prices deviate from the baseline vendor.
-- \( \beta_{organic} \): Effect of organic labeling, representing the price premium for organic strawberries.
-- \( \beta_{sale} \): Effect of sale status, representing the price discount due to promotions.
-- \( \beta_{date} \): Effect of time, capturing trends in strawberry pricing.
+- \( y_i \): Current price (`current_price`) of strawberries for observation \( i \) (dependent variable).
+- \( \beta_0 \): Intercept, representing the baseline price (reference vendor, average original price, and earliest month).
+- \( \beta_{\text{vendor}[i]} \): Vendor-specific effect, capturing how each supplier’s prices deviate from the baseline vendor.
+- \( \beta_{\text{old\_price}} \): Effect of the original price, representing how the initial pricing influences the current price.
+- \( \beta_{\text{month}} \): Effect of the observation month, capturing seasonal or temporal trends in strawberry pricing.
 - \( \epsilon_i \): Residual error, accounting for variability not explained by the predictors.
+
 ## Priors in the Bayesian Framework
 
-In the Bayesian framework, priors are specified for each parameter:
+### Coefficients (\( \beta \)):
 
-- **Coefficients (\( \beta \))**:
-  \[
-  \beta \sim \text{Normal}(0, 2.5)
-  \]
-  - This reflects the belief that most effects are small and centered around zero, with moderate variability.
+\[
+\beta \sim \text{Normal}(0, 2.5)
+\]
 
-- **Residual Standard Deviation (\( \sigma \))**:
-  \[
-  \sigma \sim \text{Exponential}(1)
-  \]
-  - This ensures positivity and reflects typical variance patterns in continuous data.
+This reflects the belief that most predictor effects are small and centered around zero, with moderate variability. For example:
+- \(\beta_{\text{old\_price}}\) is expected to have a positive value since higher original prices generally correlate with higher current prices.
+- \(\beta_{\text{month}}\) is expected to capture small but meaningful fluctuations due to seasonal trends.
 
+### Residual Standard Deviation (\( \sigma \)):
+
+\[
+\sigma \sim \text{Exponential}(1)
+\]
+
+This prior ensures positivity and reflects typical variance patterns in continuous outcome data.
 
 
 We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
@@ -235,42 +258,74 @@ We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use
 ### Model justification
 
 #### Why Use a Bayesian Linear Regression Model?
-A Bayesian linear regression model is an effective approach for this analysis because it balances simplicity, interpretability, and flexibility. It is particularly suited for modeling a continuous dependent variable, such as the price of strawberry, while allowing the incorporation of prior knowledge and the quantification of uncertainty in parameter estimates. This model provides a robust framework to understand how vendor, organic status, sale status, and time influence strawberry prices.
+A Bayesian linear regression model is a suitable approach for this analysis because it balances simplicity, interpretability, and flexibility while quantifying uncertainty in parameter estimates. This model is particularly effective for exploring the continuous outcome variable, current_price, and its relationship with predictors such as vendor, month, and original price (old_price). Unlike traditional linear regression, which assumes a deterministic relationship between predictors and the outcome, the Bayesian framework provides posterior distributions for all parameters, enabling richer and more nuanced inferences. This approach allows us to incorporate prior knowledge, account for uncertainty, and provide probabilistic insights into strawberry pricing.
 
-Traditional linear regression assumes a deterministic relationship between predictors and the outcome, providing point estimates for coefficients. However, the Bayesian approach enriches this by generating posterior distributions for all model parameters. These distributions capture the uncertainty inherent in the data, providing a clearer and more nuanced understanding of the predictors' effects.
+The Bayesian framework also handles sparse or imbalanced data effectively by leveraging prior distributions to stabilize parameter estimates. For example, when certain vendors have fewer observations, the priors prevent overfitting and provide regularized estimates, making the model robust to variability in data distribution. This ensures reliable insights into vendor-specific pricing strategies, seasonal trends, and the influence of baseline (old_price) on observed (current_price) prices.
 #### Benefits of Using Bayesian Regression
 
 1. **Uncertainty Quantification**:
-   - The Bayesian approach provides posterior distributions for parameters rather than single-point estimates. For example, the posterior distribution of \( \beta_{\text{organic}} \) allows us to quantify the uncertainty around the organic price premium.
+   - The Bayesian approach provides posterior distributions for each parameter, allowing for uncertainty quantification. For example, the posterior distribution of \( \beta_{\text{vendor}} \) helps quantify the uncertainty around vendor-specific pricing effects.
 
 2. **Incorporating Prior Knowledge**:
-   - Priors enable the incorporation of domain knowledge into the model. For instance:
-     - The prior for \( \beta_{\text{organic}} \) reflects the expectation of a positive premium for organic strawberries.
-     - The prior for \( \beta_{\text{sale}} \) reflects the expectation that sales typically reduce prices.
+   - Priors enable the incorporation of domain knowledge into the analysis. For instance:
+     - \( \beta_{\text{vendor}} \): Reflects the expectation that most vendor effects are close to zero, with some deviations.
+     - \( \beta_{\text{month}} \): Captures small but meaningful seasonal effects.
+     - \( \beta_{\text{old\_price}} \): Represents the assumption that higher original prices lead to higher observed prices.
 
-3. **Flexibility with Sparse Data**:
-   - Bayesian models stabilize parameter estimates when some predictors, such as certain vendors, have fewer observations. The priors act as a regularizing factor in such cases.
+3. **Handling Sparse Data**:
+   - Bayesian models stabilize estimates when some categories (e.g., certain vendors) have fewer observations. Priors regularize the estimates, reducing the risk of overfitting.
 
 4. **Probabilistic Insights**:
-   - Posterior distributions provide credible intervals, which are more intuitive than frequentist confidence intervals. For example, a 95% credible interval for \( \beta_{\text{organic}} \) of \([0.5, 1.5]\) means there is a 95% probability that the organic premium lies within this range.
+   - Posterior distributions provide credible intervals, making it easier to interpret parameter estimates. For instance, a 95% credible interval for \( \beta_{\text{old\_price}} \) of \([0.8, 1.2]\) means there is a 95% probability that the original price effect lies within this range.
 
-#### Expected Results
+#### Explanation of Priors
 
-1. **Vendor-Specific Strategies**:
-   - The model will estimate vendor-specific coefficients (\( \beta_{\text{vendor}} \)) to reveal pricing differences among suppliers.
-   - For example, some vendors may consistently charge higher prices due to branding or location.
+##### Priors for Coefficients (\( \beta \)):
 
-2. **Organic Premium**:
-   - The coefficient \( \beta_{\text{organic}} \) is expected to be positive, quantifying the price premium for organic strawberries.
+\[
+\beta \sim \text{Normal}(0, 2.5)
+\]
 
-3. **Effect of Sales**:
-   - The coefficient \( \beta_{\text{sale}} \) is expected to be negative, reflecting price reductions during sales promotions.
+- **Reasoning**: The normal prior reflects the belief that most predictor effects are small and centered around zero, with moderate variability. For example:
+  - \( \beta_{\text{vendor}} \): Reflects the expected variability in pricing strategies across vendors, assuming deviations from the baseline vendor are likely small but not negligible.
+  - \( \beta_{\text{old\_price}} \): Expected to be positive, as higher original prices generally result in higher current prices, with moderate variability in the relationship.
+  - \( \beta_{\text{month}} \): Captures seasonal effects on pricing, which are typically small but non-zero.
 
-4. **Temporal Trends**:
-   - The coefficient \( \beta_{\text{date}} \) will capture seasonal or long-term trends in strawberry pricing, identifying high-demand periods or price fluctuations.
+##### Prior for the Intercept (\( \beta_0 \)):
+
+\[
+\beta_0 \sim \text{Normal}(0, 2.5)
+\]
+
+- **Reasoning**: The intercept represents the baseline price when all predictors are at their reference levels. This prior assumes the baseline price is near zero but allows for moderate deviations.
+
+##### Prior for Residual Standard Deviation (\( \sigma \)):
+
+\[
+\sigma \sim \text{Exponential}(1)
+\]
+
+- **Reasoning**: The exponential prior ensures positivity and reflects typical patterns of variability in continuous outcomes, such as prices. This helps the model account for unobserved variability not explained by the predictors.
+
+#### Choice of Predictors
+
+##### Vendor (`vendor`)
+
+- **Role**: The vendor variable is categorical, capturing supplier-specific pricing strategies. Each vendor adopts distinct pricing approaches based on branding, market positioning, and target demographics.
+- **Importance**: By including this variable, the model quantifies how much each vendor's prices deviate from the baseline vendor, providing insights into vendor-specific strategies and market segmentation.
+
+##### Month (`month`)
+
+- **Role**: The numeric `month` variable captures seasonal trends in strawberry pricing. This allows the model to account for temporal effects, such as higher prices during off-seasons or lower prices during harvest periods.
+- **Importance**: Including `month` helps the model identify recurring seasonal patterns, enabling a better understanding of time-based price fluctuations.
+
+##### Original Price (`old_price`)
+
+- **Role**: The continuous variable `old_price` represents the baseline price before any discounts or promotions. This predictor captures the relationship between promotional activity and observed prices.
+- **Importance**: Including this variable enables the model to assess how the gap between `old_price` and `current_price` varies across vendors and time, providing insights into promotional strategies and pricing adjustments.
 
 
-The Bayesian linear regression model provides a robust framework for understanding strawberry pricing dynamics in the Canadian market. By including predictors such as vendor, organic status, sale status, and date, the model captures both individual and combined effects on pricing. Its ability to quantify uncertainty, incorporate prior knowledge, and analyze temporal trends makes it a valuable tool for uncovering actionable insights in strawberry pricing strategies and market dynamics.
+The Bayesian linear regression model is particularly suited for analyzing strawberry pricing as it allows for robust, interpretable, and probabilistic inferences. By including predictors such as vendor, month, and original price, the model captures vendor-specific pricing strategies, seasonal trends, and promotional behaviors. The chosen priors reflect realistic expectations about the predictors' effects, ensuring the model's estimates are stable and reliable. This approach provides a comprehensive framework for understanding strawberry pricing dynamics in the Canadian market.
 
 
 # Results
@@ -285,9 +340,10 @@ Our results are summarized in @tbl-modelresults.
 
 library(rstanarm)
 
-first_model <-
-  readRDS(file = here::here("models/first_model.rds"))
+vendor_price_model <-
+  readRDS(file = here::here("models/vendor_price_model.rds"))
 ```
+
 
 ```{r}
 #| echo: false
@@ -298,15 +354,54 @@ first_model <-
 
 modelsummary::modelsummary(
   list(
-    "First model" = first_model
+    "strawberry price model" = vendor_price_model
   ),
   statistic = "mad",
   fmt = 2
 )
 ```
 
+The Bayesian linear regression model provides valuable insights into the factors affecting strawberry prices ($\text{current\_price}$) across Canadian vendors. The results reveal significant differences in vendor pricing strategies, seasonal trends, and the relationship between original and current prices. The intercept ($\beta_0 = 1.52$, SE = 0.66) represents the baseline price for the reference vendor when all predictors are at their baseline levels. This suggests that the reference vendor’s average price is modest compared to others.
+
+Vendor coefficients highlight pricing diversity, with **Metro** charging significantly higher prices ($\beta_{\text{Metro}} = 7.50$, SE = 0.59) compared to the reference vendor, consistent with its premium market positioning. In contrast, budget-friendly vendors such as **No Frills** ($\beta = -0.81$, SE = 0.62) and **Save-On-Foods** ($\beta = -1.00$, SE = 0.63) exhibit lower prices, catering to cost-conscious consumers. Mid-tier vendors, including **Voila**, **T\&T**, and **Walmart**, show smaller negative effects, reflecting competitive but accessible pricing strategies.
+
+The model also uncovers seasonal trends, with a small but positive effect of $\text{month}$ ($\beta_{\text{month}} = 0.05$, SE = 0.04). Prices appear to gradually increase over time, likely due to seasonal supply and demand fluctuations or inflation. This aligns with the seasonal nature of fresh produce, where prices typically rise during off-seasons when supply is limited. Additionally, the strong relationship between $\text{old\_price}$ and $\text{current\_price}$ ($\beta_{\text{old\_price}} = 0.59$, SE = 0.01) underscores the proportional nature of promotional pricing, where discounts often preserve baseline pricing hierarchies.
+
+Model performance metrics confirm the model's validity, with $R^2$ and adjusted $R^2$ values of 0.139 and 0.137, respectively, indicating that approximately 13.9\% of the variance in prices is explained by the predictors. While this may seem modest, it reflects the inherent complexity of pricing, influenced by unobserved factors like geographic location and product attributes. An RMSE of 11.79 indicates reasonable prediction accuracy given the variability in vendor strategies.
+
+These findings have actionable implications for both vendors and consumers. Vendors like Metro can continue emphasizing quality to justify their premium pricing, while budget vendors such as Save-On-Foods may explore targeted promotions to enhance their appeal. Consumers seeking affordability may benefit from shopping at vendors like No Frills, whereas quality-focused shoppers may prefer Metro despite its higher prices. Future research could incorporate additional predictors, such as organic labeling or sale status, to refine the understanding of strawberry pricing dynamics in the Canadian market.
+
+```{r}
+# Extract posterior draws
+posterior_draws <- as.matrix(vendor_price_model)
+
+# Generate credible interval plot for all parameters
+mcmc_intervals(
+  posterior_draws,
+  pars = c("(Intercept)", "vendorLoblaws", "vendorMetro", "vendorNoFrills", 
+           "vendorSaveOnFoods", "vendorTandT", "vendorVoila", "vendorWalmart",
+           "month", "old_price"),
+  prob = 0.95,  # 95% credible interval
+  prob_outer = 0.95  # 95% outer credible interval
+) +
+  ggtitle("Posterior Credible Intervals for Model Parameters") +
+  xlab("Parameter Estimate")
+```
+```{r}
+# Extract posterior samples
+posterior_draws <- as.matrix(vendor_price_model)
 
 
+# Plot posterior distributions using histograms
+mcmc_hist(
+  posterior_draws,
+  pars = c("vendorLoblaws", "vendorMetro", "vendorNoFrills", 
+           "vendorSaveOnFoods", "vendorTandT", "vendorVoila", "vendorWalmart", 
+           "month", "old_price")
+) +
+  ggtitle("Posterior Distribution Histograms for Vendors and Other Parameters") +
+  xlab("Parameter Estimate")
+```
 
 # Discussion
 
@@ -357,11 +452,12 @@ In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. Th
 #| fig-cap: "Examining how the model fits, and is affected by, the data"
 #| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
 
-pp_check(first_model) +
+pp_check(vendor_price_model) +
   theme_classic() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  scale_x_continuous(limits=c(0,100))
 
-posterior_vs_prior(first_model) +
+posterior_vs_prior(vendor_price_model) +
   theme_minimal() +
   scale_color_brewer(palette = "Set1") +
   theme(legend.position = "bottom") +
@@ -384,9 +480,9 @@ posterior_vs_prior(first_model) +
 #| fig-subcap: ["Trace plot", "Rhat plot"]
 #| layout-ncol: 2
 
-plot(first_model, "trace")
+plot(vendor_price_model, "trace")
 
-plot(first_model, "rhat")
+plot(vendor_price_model, "rhat")
 ```
 
 

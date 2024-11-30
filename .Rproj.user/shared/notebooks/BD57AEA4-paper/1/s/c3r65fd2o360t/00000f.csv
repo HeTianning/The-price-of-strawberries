@@ -8,32 +8,7 @@
 "0","library(ggplot2)"
 "0","library(dplyr)"
 "0","library(arrow)"
-"2","
-Attaching package: ‘arrow’
-
-"
-"2","The following object is masked from ‘package:lubridate’:
-
-    duration
-
-"
-"2","The following object is masked from ‘package:utils’:
-
-    timestamp
-
-"
 "0","library(here)"
 "0","library(modelsummary)"
-"2","`modelsummary` 2.0.0 now uses `tinytable` as its default table-drawing
-  backend. Learn more at: https://vincentarelbundock.github.io/tinytable/
-
-Revert to `kableExtra` for one session:
-
-  options(modelsummary_factory_default = 'kableExtra')
-  options(modelsummary_factory_latex = 'kableExtra')
-  options(modelsummary_factory_html = 'kableExtra')
-
-Silence this message forever:
-
-  config_modelsummary(startup_message = FALSE)
-"
+"0","library(bayesplot)"
+"0","library(rstanarm)"

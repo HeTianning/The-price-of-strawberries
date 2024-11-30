@@ -1,8 +1,0 @@
-"0","#| echo: false"
-"0","#| message: false"
-"0","#| label: tbl-rawdata"
-"0","#| tbl-cap: ""Paramedic Services Incident Data for 2022"" "
-"0",""
-"0","data <- read_csv(here::here(""data/01-raw_data/raw_data.csv""))"
-"2","Error: '/Users/stephgu/Desktop/The-price-of-strawberries/data/01-raw_data/raw_data.csv' does not exist.
-"

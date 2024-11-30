@@ -1,14 +1,14 @@
 {
-    "id": "CCB93A04",
+    "id": "BE78DBC9",
     "path": "~/Desktop/The-price-of-strawberries/scripts/05-exploratory_data_analysis.R",
     "project_path": "scripts/05-exploratory_data_analysis.R",
     "type": "r_source",
-    "hash": "903640122",
+    "hash": "0",
     "contents": "",
-    "dirty": false,
-    "created": 1732812110846.0,
+    "dirty": true,
+    "created": 1732907186279.0,
     "source_on_save": false,
-    "relative_order": 3,
+    "relative_order": 2,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
@@ -20,7 +20,7 @@
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1732907116682,
+    "last_content_update": 1732931145250,
     "read_only": false,
     "read_only_alternatives": []
 }
