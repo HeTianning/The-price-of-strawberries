@@ -417,14 +417,16 @@ In this graph(@fig-posterior),the posterior distribution histograms illustrate t
 
 # Discussion
 
-## First discussion point {#sec-first-point}
+## Vendor-Specific Pricing Strategies
+The analysis reveals significant differences in strawberry pricing across vendors, highlighting how supplier identity influences retail prices. Metro, as a premium vendor, consistently shows a positive effect on prices compared to the reference vendor, aligning with its market positioning that likely emphasizes quality and exclusivity. Conversely, budget-friendly vendors such as No Frills and Save-On-Foods demonstrate negative effects, reflecting their focus on affordability and cost-conscious consumers. Mid-tier vendors, including Walmart and T&T, exhibit smaller and less consistent deviations, indicating competitive but accessible pricing strategies. These findings suggest that vendor-specific pricing strategies are critical in shaping market segmentation. The implications are far-reaching: premium vendors can continue leveraging their high-price positioning to attract niche markets, while budget vendors might explore additional promotions to enhance their market share. Furthermore, this variability underscores the need for consumers to carefully consider vendor selection as a determinant of pricing, while offering vendors opportunities to refine strategies based on market positioning.
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+## Temporal Trends in Pricing
+The study uncovers a small but positive relationship between the passage of time (month) and strawberry prices, indicating a gradual increase in prices over the observed period. This finding likely reflects seasonal supply-demand dynamics, inflationary pressures, or changes in production costs for fresh produce. While the effect is modest, it highlights the temporal nature of pricing in retail markets and raises questions about the drivers of these trends. Vendors may use this insight to anticipate price increases and adjust their strategies accordingly, particularly during periods of high demand or limited supply. For consumers, the trend underscores the importance of seasonal awareness when planning purchases, as prices may peak during off-seasons or holidays. The finding also has implications for policymakers or agricultural producers, who might explore ways to stabilize supply chains or promote affordability during periods of high price variability. Further research incorporating non-linear models or external factors such as weather conditions could provide a more detailed understanding of how seasonal patterns influence strawberry pricing.
 
-## Second discussion point
 
+## The Role of Original Price in Promotional Pricing
+The strong and significant relationship between old_price and current_price highlights the structured nature of promotional pricing strategies. Higher original prices are associated with proportionally higher current prices, even after discounts or sales are applied. This suggests that vendors maintain pricing hierarchies across their product offerings, preserving the perceived value of premium products even during promotional periods. For vendors, this finding underscores the importance of setting initial prices strategically, as they serve as an anchor for both regular and discounted pricing. For consumers, it suggests that discounts may not always reflect deep value but instead preserve the relative pricing order among vendors or product lines. This structured approach to promotional pricing also indicates that vendors likely use data-driven algorithms or market insights to optimize discounts while maintaining brand positioning. Future research could explore the behavioral aspects of how consumers respond to these pricing strategies, shedding light on how perceptions of value and fairness influence purchasing decisions during sales events.
 
-## Third discussion point
 
 ## Weaknesses and next steps
 
