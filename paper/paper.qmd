@@ -446,6 +446,120 @@ Future work can address these limitations by incorporating non-linear models suc
 
 # Appendix {-}
 
+##Comprehensive Data Collection Plan for Strawberry Pricing Analysis
+
+###Introduction to Survey Design
+To understand strawberry pricing dynamics across Canada, a comprehensive and robust data collection strategy is essential. This strategy combines multiple methodologies, including web scraping, manual surveys, partnerships with retailers, and the integration of public datasets. The overarching aim is to ensure representativeness across geographic regions, vendor types, and temporal variations. By collecting detailed data, the study aims to provide actionable insights into pricing strategies, seasonal trends, and promotional effects. Each method is designed to address specific gaps and collectively produce a holistic dataset that reflects the Canadian strawberry market.
+
+###Data Collection Methods
+####Web Scraping
+Web scraping will serve as the primary tool for automating data collection from vendor websites. Websites of major grocery chains such as Walmart, Loblaws, Metro, and Save-On-Foods will be targeted. Data points to be extracted include product name, current price, original price (if discounted), sale status, organic certification, and the date of observation. Python libraries such as BeautifulSoup, Scrapy, and Selenium will be employed to scrape structured data, which will then be stored in a centralized database.
+
+The scraping process will be automated to run weekly, capturing real-time pricing updates. However, ethical and legal compliance must be prioritized. Scraping scripts will be designed to respect the terms of service of each website, and manual validation will be performed periodically to ensure the accuracy of the extracted data. This method is cost-effective, requiring a one-time investment in script development and minimal ongoing maintenance, estimated at CAD 5,000–10,000 for setup and CAD 1,000 per month for maintenance.
+
+####Manual Surveys
+While web scraping provides online data, manual surveys will collect in-store pricing information to capture physical promotions and discrepancies between online and in-store prices. Field researchers will visit major grocery stores, farmers’ markets, and regional vendors to record prices, sale statuses, and organic certifications. Data will be entered into mobile-friendly platforms such as KoboToolbox or Google Forms to minimize manual errors and enable real-time validation.
+
+Sampling for manual surveys will focus on urban centers and suburban areas in all Canadian provinces, with larger provinces like Ontario and British Columbia receiving higher sampling densities. Manual surveys are resource-intensive, with an estimated budget of CAD 20,000–30,000 to cover wages, travel expenses, and equipment costs. Training workshops will be conducted to ensure consistency in data collection and adherence to protocols.
+
+####Retailer Partnerships
+Collaborating with retailers and industry organizations will provide access to transactional data, which includes point-of-sale (POS) information such as pricing, sales volume, and regional variations. Partnerships will be sought with chains like Walmart, Metro, and Save-On-Foods, as well as the Retail Council of Canada. Data-sharing agreements will ensure confidentiality and specify how the data will be used.
+
+Retailer partnerships provide high-quality, granular data but may involve negotiation challenges and costs associated with access to proprietary data. Agreements must outline clear data privacy policies and address potential conflicts of interest. These partnerships can also offer insights into customer purchasing patterns, which may supplement the core pricing analysis.
+
+####Public Data Repositories
+Supplementary data from public sources, such as Statistics Canada, can contextualize the primary dataset. Variables such as regional agricultural output, weather patterns, and population statistics will be integrated to provide a broader understanding of pricing determinants. Public datasets are cost-effective but may lack granularity, necessitating careful curation and integration with primary data.
+
+###Sampling Strategy
+To ensure the representativeness of the dataset, a stratified random sampling approach will be used. The sampling frame will be stratified by geography, vendor type, and time.
+####Geographic Stratification
+Each province and territory will be treated as a stratum. Larger provinces like Ontario, Quebec, and British Columbia will have higher sample sizes due to their larger populations and market diversity. For example:
+-Ontario: 300 stores (across urban and rural areas)
+-British Columbia: 200 stores
+-Alberta: 150 stores
+-Smaller provinces: 50–100 stores each
+####Vendor Stratification
+Vendors will be categorized into three groups:
+-National Chains: Large retailers like Walmart and Loblaws.
+-Regional Chains: Vendors like Save-On-Foods and Metro, which operate in specific regions.
+-Farmers’ Markets and Local Vendors: Smaller, independent vendors that cater to niche markets. Sampling will ensure proportional representation from each category, with an emphasis on national chains for broader market insights.
+####Temporal Sampling
+Data will be collected bi-weekly throughout the year to capture seasonal trends. Special attention will be given to peak seasons (e.g., summer harvest months) and holiday periods (e.g., Thanksgiving, Christmas) when pricing and promotions are most dynamic.
+
+###Data Entry and Management
+####Data Recording
+Data collected manually will be entered into Google Sheets or Excel during the initial phase and then migrated to a centralized SQL database or cloud storage system for processing and analysis. Web-scraped data will directly feed into the centralized system using automated pipelines.
+####Data Cleaning
+Cleaning will involve:
+-Removing duplicate entries.
+-Handling missing data through imputation techniques (e.g., multiple imputation for continuous variables).
+-Identifying outliers using statistical and visual methods (e.g., boxplots).
+####Data Integration
+Datasets from different sources (web scraping, surveys, and partnerships) will be merged using unique identifiers such as vendor names and observation dates. Consistency checks will ensure uniform formatting and variable definitions.
+
+###Practical Considerations
+####Budget
+The total budget for this project is estimated at CAD 50,000–70,000. Major cost components include personnel wages (field researchers, data scientists), travel expenses, equipment (e.g., tablets), and data acquisition fees from retailers.
+####Personnel
+-Web Scraping: A data scientist will develop and maintain scraping scripts.
+-Manual Surveys: 10–15 field researchers will be hired and trained.
+-Data Management: A project manager will oversee data integration and quality assurance.
+####Partnerships
+-Collaborate with the Canadian Ministry of Agriculture for agricultural production data.
+-Partner with the Retail Council of Canada to access aggregated sales data.
+-Negotiate with individual vendors for POS data access.
+####Legal and Ethical Issues
+-Ensure compliance with data privacy laws, such as PIPEDA in Canada.
+-Obtain informed consent for data sharing and usage from retailers and survey participants.
+
+This comprehensive plan outlines a multi-method data collection strategy that balances efficiency, cost, and representativeness. By combining web scraping, manual surveys, retailer partnerships, and public datasets, the project will capture the complexity of strawberry pricing dynamics across Canada. Careful attention to sampling, legal compliance, and data quality ensures that the collected data will support robust analysis and actionable insights. This integrated approach provides a solid foundation for understanding market trends and guiding vendor and consumer decisions.
+
+##Comprehensive Data Analysis Plan for Strawberry Pricing Dynamics
+###Overview of Analysis Plan
+After collecting the strawberry pricing data, the next step involves applying specific analysis methods to uncover key insights into vendor pricing strategies, seasonal trends, and the impact of promotions. The primary analysis will use a Bayesian linear regression model, supplemented by exploratory data analysis (EDA), diagnostic checks, and predictive performance evaluations. Each method and its implementation is described in detail below, along with a discussion of its strengths, limitations, and areas for improvement.
+### Exploratory Data Analysis (EDA)
+
+Exploratory Data Analysis (EDA) serves as the foundation for understanding the dataset, identifying patterns, and detecting potential issues before applying advanced models. Visualization techniques such as boxplots, histograms, and line plots will reveal distributions and trends in key variables like `current_price`, `old_price`, and `month`. For example, boxplots comparing prices across vendors will highlight vendor-specific pricing strategies, while line plots will uncover temporal trends, including seasonal variations in strawberry prices. Summary statistics, such as the mean and median of prices per vendor or region, will provide an overview of central tendencies and variability. Correlation matrices will also help identify relationships between variables, such as the association between original and discounted prices.
+
+While EDA provides critical insights, its reliance on visual and descriptive methods limits its ability to quantify relationships or infer causality. Nevertheless, it is an essential first step that ensures data quality and informs subsequent modeling decisions. Potential issues, such as missing values or outliers, identified during EDA, will be addressed through imputation techniques and robust statistical methods.
+
+### Bayesian Linear Regression Model
+
+The primary analysis method is a Bayesian linear regression model, chosen for its flexibility and ability to incorporate prior knowledge while providing robust parameter estimates. The model will quantify the effects of predictors such as vendor (`vendor`), sale status (`sale_status`), temporal trends (`month`), and original price (`old_price`) on the current price of strawberries (`current_price`). The model will include the following structure:
+
+\[
+y_i = \beta_0 + \beta_{\text{vendor}[i]} + \beta_{\text{organic}} \cdot x_{\text{organic}[i]} + \beta_{\text{sale}} \cdot x_{\text{sale}[i]} + \beta_{\text{month}} \cdot x_{\text{month}[i]} + \beta_{\text{old\_price}} \cdot x_{\text{old\_price}[i]} + \epsilon_i
+\]
+
+Each coefficient (\(\beta\)) will have a prior distribution, such as a normal prior centered at zero, reflecting initial uncertainty about its effect. For instance, the prior for \(\beta_{\text{vendor}}\) assumes no significant differences between vendors initially, allowing the data to dominate posterior estimates. The Bayesian framework also provides posterior distributions for each parameter, which capture uncertainty and enable credible intervals for inference. For example, a 95% credible interval for \(\beta_{\text{old\_price}}\) indicates the range of plausible values for the effect of original prices on current prices, accounting for uncertainty.
+
+The Bayesian approach offers significant advantages, including the ability to stabilize estimates for predictors with limited observations and provide probabilistic interpretations of results. However, it requires careful selection of priors, as overly informative priors may bias the results, while uninformative priors may weaken the model’s ability to draw meaningful conclusions. The computational demands of Bayesian modeling are another limitation, particularly for large datasets, but this can be addressed through parallel processing or variational inference methods.
+
+### Diagnostic Checks and Model Validation
+
+Model diagnostics are critical to ensuring that the Bayesian regression model fits the data well and produces reliable estimates. Posterior predictive checks (pp_checks) will compare observed data with simulated data from the model to evaluate its ability to replicate the observed distribution of prices. For instance, discrepancies between the predicted and observed distributions may indicate model misspecifications or missing predictors.
+
+Trace plots will be used to examine the convergence of Markov Chain Monte Carlo (MCMC) sampling for each parameter, ensuring that the chains are stationary and mixing well. Rhat values, which assess convergence across chains, must be close to 1.0 for all parameters. Residual analysis will identify potential violations of assumptions, such as heteroscedasticity or autocorrelation, which may require model adjustments.
+
+Model validation will include leave-one-out cross-validation (LOO-CV) to evaluate predictive performance and compare alternative models. For example, LOO-CV can confirm whether including interaction terms (e.g., vendor and sale status) improves the model’s ability to predict prices. Metrics like root mean square error (RMSE) will quantify the average deviation between observed and predicted prices, providing a measure of overall model fit.
+
+While these diagnostics enhance the robustness of the analysis, they require significant computational resources and expertise to interpret. Incorporating automated diagnostic tools, such as those provided by the **bayesplot** package, can streamline this process and improve efficiency.
+
+### Predictive Analysis and Simulations
+
+Beyond inference, the Bayesian regression model will be used for predictive analysis to assess the model’s real-world applicability. Simulations will explore hypothetical scenarios, such as the effect of a uniform 10% discount across all vendors, to predict how pricing strategies might shift and impact consumer behavior. Temporal trends can also be analyzed by simulating seasonal effects, such as price fluctuations during peak harvest months or holiday periods.
+
+Predictive accuracy will be evaluated using observed holdout data to ensure the model generalizes well to unseen scenarios. Comparisons with alternative methods, such as generalized additive models (GAMs) or random forests, will provide additional validation. Simulations offer valuable insights for stakeholders, such as how adjusting promotional strategies might influence market share, but they depend heavily on the quality of input data and assumptions about unobserved factors.
+
+### Limitations and Areas for Improvement
+
+The analysis methods have inherent limitations. Bayesian regression assumes linear relationships between predictors and outcomes, which may not capture non-linear trends or complex interactions. Extending the model to include interaction terms or adopting more flexible approaches, such as GAMs, can address this limitation. The reliance on priors, while a strength in stabilizing estimates, introduces the risk of bias if priors are not chosen carefully. Sensitivity analysis is crucial to ensure that results are robust to changes in prior specifications.
+
+Another limitation is the potential for unobserved confounders, such as geographic factors or consumer preferences, which may bias estimates. Collecting additional variables, such as store location or customer demographics, could improve the model’s explanatory power. Computational demands are also a challenge, particularly for large datasets or complex models. Using high-performance computing resources or approximate inference methods can mitigate these issues.
+
+
+The data analysis plan integrates EDA, Bayesian linear regression, diagnostic checks, and predictive analysis to provide a comprehensive understanding of strawberry pricing dynamics. While the Bayesian approach offers robust and probabilistic insights, it requires careful attention to prior selection, diagnostics, and computational efficiency. The combination of rigorous modeling and scenario-based simulations ensures actionable insights for stakeholders, including vendors and consumers. Future improvements, such as incorporating additional predictors or testing non-linear models, can further enhance the analysis and its applicability to real-world pricing strategies.
+
 
 # Additional data details
 
