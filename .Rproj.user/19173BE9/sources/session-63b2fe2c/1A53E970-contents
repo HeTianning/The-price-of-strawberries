@@ -1,6 +1,6 @@
 ---
-title: "The price of strawberries at different suppliers in Canada"
-subtitle: "My subtitle if needed"
+title: "Analyzing Strawberry Pricing Strategies Across Canadian Vendors"
+subtitle: "A Data-Driven Investigation of Seasonal Trends, Vendor Variability, and Promotional Impacts on Grocery Pricing"
 author: 
   - Tianning He
 thanks: "Code and data are available at: https://github.com/HeTianning/The-price-of-strawberries"
@@ -561,7 +561,27 @@ Another limitation is the potential for unobserved confounders, such as geograph
 The data analysis plan integrates EDA, Bayesian linear regression, diagnostic checks, and predictive analysis to provide a comprehensive understanding of strawberry pricing dynamics. While the Bayesian approach offers robust and probabilistic insights, it requires careful attention to prior selection, diagnostics, and computational efficiency. The combination of rigorous modeling and scenario-based simulations ensures actionable insights for stakeholders, including vendors and consumers. Future improvements, such as incorporating additional predictors or testing non-linear models, can further enhance the analysis and its applicability to real-world pricing strategies.
 
 
-# Additional data details
+## Additional data details
+
+###Data Source and Cleaning Process
+The data for this study comes from the Project Hammer website, an open data platform centered on grocery prices from multiple suppliers in Canada. The platform captures multidimensional data including product prices, supplier information, promotional discounts, etc. through web scraping technology, and combines manual verification to ensure its reliability. These data provide price dynamics in different regions and suppliers in Canada, laying the foundation for studying the fluctuations and market strategies of strawberry prices.
+
+In order to meet the analysis needs, the data was cleaned in multiple steps. First, the rows with missing values in the current price and old price variables were deleted because these prices are the core of the study. If the price records are incomplete, the analysis results will be distorted. In addition, for the vendor and month variables, it was confirmed that there were no missing values to ensure the integrity of the supplier and time information.
+
+Secondly, the interquartile range (IQR) method was used to detect and process outliers. The focus of the cleaning was on identifying and eliminating possible entry errors (such as extremely low or high prices). However, legitimate outliers (such as high prices for high-end strawberries) were retained to ensure the authenticity of the data. At the same time, all price fields were standardized and prices were recorded uniformly as the price per pound of strawberries to facilitate horizontal comparison between suppliers.
+
+###The strengths and limitations of data
+On the plus side, the data is diverse, covering both national and regional suppliers, including Voila, Metro, and Walmart, among others. This provides a unique perspective on the differences between different market positioning and pricing strategies. In addition, the data cover observations across multiple months, providing a solid basis for exploring seasonal fluctuations in strawberry prices. Simultaneous recording of the price variables current price and old price allows studying the impact of discount and promotion strategies on the final price.
+
+Although the data has significant advantages, there are also some limitations. First, the data focuses primarily on urban and suburban providers, and pricing trends in rural areas may be understated. Second, web scraping technology captures static snapshots and is difficult to record real-time price fluctuations, such as flash sales or limited-time discounts. In addition, some records lack explicit promotion status markers (such as whether the product is discounted), which limits detailed analysis of discount strategies. Finally, the density of records across months may be uneven across different providers, which may introduce bias in the temporal analysis.
+
+##Data Analysis Outlook
+Based on the cleaned data, the analysis can focus on several key directions. First, by combining the current price and old price variables, we can delve into the impact of promotions on pricing strategies. For example, we can quantify the magnitude of price fluctuations during promotions for different suppliers and their potential impact on consumer behavior. Second, through the month variable, we can capture the seasonal fluctuations in strawberry prices. This will help us understand how supply and demand adjust with seasonal changes and provide an important basis for predicting future price trends.
+
+In addition, using the vendor variable, we can compare the pricing strategies of different suppliers. The study may reveal whether high-end suppliers (such as Metro) are positioned in the high-end market through higher prices, while low-price suppliers (such as Walmart and Save-On-Foods) attract more price-sensitive consumers through discounts. These findings will provide in-depth insights into understanding the dynamics of the Canadian strawberry market, while providing data support for policymakers and retailers to optimize market strategies.
+
+
+Overall, the cleaned dataset provides a valuable resource for in-depth study of strawberry price fluctuations and supplier strategies. Despite limitations such as geographic coverage bias and insufficient capture of dynamic prices, the diversity and time span of the data ensure the wide applicability of the analysis. By combining the analysis of promotions, seasonal fluctuations, and supplier differences, the study reveals complex pricing patterns and competitive strategies in the Canadian market.
 
 ## Further Background Details and Diagnostics of the Model {#sec-model-details}
 ###Model Background and Justification
