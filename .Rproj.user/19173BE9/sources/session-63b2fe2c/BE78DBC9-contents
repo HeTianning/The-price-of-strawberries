@@ -1,5 +1,5 @@
 #### Preamble ####
-# Purpose: Models... [...UPDATE THIS...]
+# Purpose: Explore and understand data by creating data visualizations
 # Author: Tianning He
 # Date: 26 November 2024 
 # Contact: tianning.he@utoronto.ca 
