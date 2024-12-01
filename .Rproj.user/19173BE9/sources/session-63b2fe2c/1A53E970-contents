@@ -33,11 +33,14 @@ library(rstanarm)
 # Introduction
 
 Strawberries are one of the most important small berries in Canada and the United States(@macoun1919strawberry), and pricing of strawberries in the Canadian retail market varies widely due to factors such as supplier strategies, promotional practices, and temporal trends. This investigation examines the determinants of strawberry prices, focusing on differences between different suppliers, the role of discounts, and seasonal effects. By utilizing a Bayesian linear regression model, the study examines the relationship between key predictors (supplier, original price, promotion, and time) and the current price of strawberries. The Bayesian approach not only provides parameter estimates but also quantifies uncertainty, thus providing a nuanced understanding of price dynamics in competitive and seasonal markets.
+
 The main objective of this analysis is to estimate and explain the factors that influence retail strawberry prices in Canada. The dependent variable current price reflects the Canadian dollar price per pound of strawberries. The key predictors include supplier identity (categorical), which captures supplier-specific pricing strategies; old price (continuous), which represents the original price before promotion, and month (continuous), which captures temporal or seasonal trends(@hodgdon2024current). By modeling these relationships, the study aims to quantify how these variables affect pricing and explore their combined impact on strawberry price changes.
+
 The results show significant differences in supplier-specific pricing strategies, with Metro offering higher prices than other suppliers, consistent with its premium market positioning. Time trends indicate a gradual but consistent increase in strawberry prices over time, possibly reflecting seasonal demand or inflationary pressures. Furthermore, the analysis shows a strong relationship between original and discounted prices, suggesting that promotional pricing generally preserves relative price hierarchies among suppliers. Bayesian models confirm strong convergence and robust posterior estimates, ensuring the reliability of these findings.
+
 Understanding the factors driving strawberry prices is critical for both consumers and retailers. For suppliers, insights into pricing dynamics can inform strategies to optimize revenue while remaining competitive. For consumers, this analysis provides valuable information to navigate the market, highlighting opportunities to save costs by selecting suppliers or purchasing during promotions. More broadly, these findings contribute to the study of the fresh produce market, where pricing is influenced by a complex interaction between supplier strategies, seasonal supply, and consumer behavior. This study lays the foundation for future research that could incorporate additional factors, such as geographic differences or organic certification, to further enrich our understanding of pricing dynamics in Canadian retail.
 
-Telegraphing paragraph: The remainder of this paper is structured as follows. @sec-data....
+The rest of the paper is structured as follows. @sec-data describes the data collection process, including data sources, sampling strategy, and preprocessing steps taken to ensure data quality. @sec-model outlines the methodological framework, focusing on the Bayesian linear regression model, its formulation, and diagnostic checks. @sec-result presents the main findings of the analysis, focusing on specific supplier pricing strategies, seasonal trends, and the impact of sales and promotions on strawberry prices. @sec-discussion discusses the implications of these findings, placing them in the broader context of consumer behavior and supplier strategies in the fresh produce market.
 
 
 
@@ -47,9 +50,6 @@ Telegraphing paragraph: The remainder of this paper is structured as follows. @s
 # Data {#sec-data}
 To simulate, test, download, clean, and model data throughout this analysis, the statistical programming language R was used [@citeR]. Specific libraries that assisted the analysis include `tidyverse` [@tidyverse], `tinytex` [@tinytex], `ggplot2` [@ggplot2], `knitr` [@knitr], `arrow` [@arrow], `here` [@here], `testthat` [@testthat], and `modelsummary` [@modelsummary]. 
 ## Overview
-
-We use the statistical programming language R [@citeR].... Our data [@shelter].... Following @tellingstories, we consider...
-
 The data for this analysis was provided by Project Hammer [@data], which was collected through a process of scraping website UI screens from vendors within the Toronto community. It contains data on product details (e.g., product name, brand, current and old price, and unit of product) for 8 different grocery stores (Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart Canada, and Save-On-Foods). Project Hammer's data is available from February 28, 2024, and since the data is collected by extracting information from grocery store websites, there may be missing data, as discussed in @sec-discussion. Through the method of screen scraping, the raw data is intended to measure and reflect grocery store vendor decisions and product pricing trends.
 For this analysis, the eight vendors - Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart Canada, and Save-On-Foods - and their pricing for strawberries were considered. The variable “price” for each supplier in this analysis reflects the current price of their product at the time the data was downloaded.
 
@@ -191,7 +191,7 @@ By leveraging these predictor variables, the study offers actionable insights in
 
 
 
-# Model
+# Model{#sec-model}
 
 ## Purpose of the Model
 
@@ -203,7 +203,7 @@ The purpose of this model is to identify and quantify the factors influencing th
 - Provide actionable insights into vendor pricing strategies and market dynamics.
 ## Model Description
 
-The chosen model is a **Bayesian linear regression model**, which builds on the simplicity of traditional linear regression while incorporating the Bayesian framework. This allows for probabilistic insights and robust uncertainty quantification, making it well-suited for analyzing the factors driving strawberry prices.
+The chosen model is a **Bayesian linear regression model**, which builds on the simplicity of traditional linear regression while incorporating the Bayesian framework. This allows for probabilistic insights and robust uncertainty quantification, making it well-suited for analyzing the factors driving strawberry prices. Further background details and diagnostics are included in [Appendix -@sec-model-details].
 
 ### Predictors in the Model
 
@@ -328,7 +328,7 @@ The Bayesian framework also handles sparse or imbalanced data effectively by lev
 The Bayesian linear regression model is particularly suited for analyzing strawberry pricing as it allows for robust, interpretable, and probabilistic inferences. By including predictors such as vendor, month, and original price, the model captures vendor-specific pricing strategies, seasonal trends, and promotional behaviors. The chosen priors reflect realistic expectations about the predictors' effects, ensuring the model's estimates are stable and reliable. This approach provides a comprehensive framework for understanding strawberry pricing dynamics in the Canadian market.
 
 
-# Results
+# Results{#sec-result}
 
 Our results are summarized in @tbl-modelresults.
 
@@ -415,7 +415,7 @@ mcmc_hist(
 ```
 In this graph(@fig-posterior),the posterior distribution histograms illustrate the variability in vendor pricing strategies, temporal trends, and the influence of original prices on current strawberry pricing. Metro’s distribution is distinctly centered around a high positive value, confirming its premium pricing strategy compared to the reference vendor. In contrast, budget vendors like Save-On-Foods and No Frills show distributions predominantly in the negative range, highlighting their focus on affordability. The parameter for `month` exhibits a narrow distribution slightly above zero, indicating a modest upward trend in prices over time, likely driven by seasonal fluctuations or inflation. The tightly concentrated posterior for `old_price` underscores its strong and consistent influence on current prices, with higher original prices maintaining a proportional relationship with final prices. These results emphasize the diverse pricing strategies across vendors and the critical role of baseline prices in shaping market dynamics.
 
-# Discussion
+# Discussion{#sec-discussion}
 
 ## Vendor-Specific Pricing Strategies
 The analysis reveals significant differences in strawberry pricing across vendors, highlighting how supplier identity influences retail prices. Metro, as a premium vendor, consistently shows a positive effect on prices compared to the reference vendor, aligning with its market positioning that likely emphasizes quality and exclusivity. Conversely, budget-friendly vendors such as No Frills and Save-On-Foods demonstrate negative effects, reflecting their focus on affordability and cost-conscious consumers. Mid-tier vendors, including Walmart and T&T, exhibit smaller and less consistent deviations, indicating competitive but accessible pricing strategies. These findings suggest that vendor-specific pricing strategies are critical in shaping market segmentation. The implications are far-reaching: premium vendors can continue leveraging their high-price positioning to attract niche markets, while budget vendors might explore additional promotions to enhance their market share. Furthermore, this variability underscores the need for consumers to carefully consider vendor selection as a determinant of pricing, while offering vendors opportunities to refine strategies based on market positioning.
@@ -563,7 +563,51 @@ The data analysis plan integrates EDA, Bayesian linear regression, diagnostic ch
 
 # Additional data details
 
-# Model details {#sec-model-details}
+## Further Background Details and Diagnostics of the Model {#sec-model-details}
+###Model Background and Justification
+The Bayesian linear regression model provides a probabilistic framework to understand the determinants of strawberry pricing across Canadian vendors. This model was chosen for its ability to incorporate prior knowledge, handle parameter uncertainty, and deliver intuitive, probabilistic interpretations of results. Unlike traditional frequentist regression, Bayesian regression generates posterior distributions for all parameters, offering insights into the uncertainty and variability of each predictor's effect.
+
+The primary dependent variable in the model is `current_price`, representing the observed price per pound of strawberries. Key predictors include vendor identity (`vendor`), original price (`old_price`), sale status (`sale_status`), and temporal trends (`month`). These variables capture the diverse factors influencing pricing, such as competitive strategies among vendors, promotional effects, and seasonal supply-demand dynamics.
+
+The model specification includes normal priors for regression coefficients (\(\beta\)) and an exponential prior for the residual standard deviation (\(\sigma\)). This setup reflects reasonable assumptions about the effects of predictors, such as small, centered effects with moderate variability. For instance, the prior for \(\beta_{\text{vendor}}\) assumes no extreme pricing differences between vendors, while allowing the data to dominate posterior updates.
+
+### Model Diagnostics and Validation
+#### Posterior Predictive Checks
+Posterior predictive checks (pp_checks) compare the observed distribution of `current_price` with simulated data generated from the model. The goal is to assess whether the model adequately captures the variability and central tendencies of the observed data. For this analysis, posterior predictive plots revealed close alignment between observed and predicted prices, indicating a good fit. Minor discrepancies at the tails suggest that the model may not fully capture extreme price outliers, which could be addressed by adding robust regression components or alternative distributions.
+
+#### Trace Plots
+Trace plots visualize the behavior of the Markov Chain Monte Carlo (MCMC) sampling process for each parameter. Convergence is achieved when chains are stationary and overlap across iterations. For this model, trace plots showed consistent mixing and no evidence of divergence, confirming that the chains have converged and are exploring the posterior distributions effectively.
+
+#### Rhat Values
+The Rhat statistic evaluates chain convergence across parallel MCMC simulations. All Rhat values for the parameters in this model were close to 1.0, indicating excellent convergence. This result provides confidence that the posterior distributions are reliable and free from sampling biases.
+
+#### Residual Analysis
+Residual plots were analyzed to assess the assumptions of normality and independence of errors. The residuals appeared approximately normal, with minor deviations for extreme values. Temporal residual plots showed no significant autocorrelation, suggesting that the inclusion of the `month` variable sufficiently accounted for seasonal trends.
+
+#### Model Fit Metrics
+- **\( R^2 \)** and **Adjusted \( R^2 \)**: The model explained approximately 13.9% of the variance in strawberry prices, reflecting the complexity of pricing dynamics influenced by unobserved factors like geographic location and consumer preferences.
+- **Root Mean Square Error (RMSE)**: An RMSE of 11.79 indicates moderate predictive accuracy, which aligns with expectations given the variability in pricing strategies across vendors.
+- **Leave-One-Out Cross-Validation (LOO-CV)**: The LOO-CV score confirmed the model's predictive consistency and supported its suitability for analyzing strawberry pricing.
+
+## Areas for Model Improvement
+
+### Interaction Terms
+Interaction terms, such as between `vendor` and `sale_status`, could capture more nuanced effects. For example, some vendors might offer larger discounts during promotions than others, which is not explicitly modeled here.
+
+### Non-Linearity
+The assumption of linear relationships between predictors and `current_price` may oversimplify the effects of variables like `month`, which could exhibit non-linear seasonal trends. Incorporating generalized additive models (GAMs) or polynomial terms for time could enhance the model’s flexibility.
+
+### Alternative Priors
+While normal priors for coefficients are intuitive and effective, sensitivity analysis could explore alternative priors, such as student-t distributions, which are more robust to outliers.
+
+### Additional Predictors
+Including variables such as geographic location (`region`) or packaging type (`packaging`) could improve the explanatory power of the model and account for unobserved heterogeneity.
+
+## Summary
+
+The Bayesian linear regression model provides a robust framework for understanding strawberry pricing dynamics. Diagnostic checks, including posterior predictive plots, trace plots, and Rhat values, confirm the model's validity and reliability. While the model captures the major drivers of price variability, areas for improvement include modeling interactions, addressing non-linearity, and incorporating additional predictors. These enhancements could refine the analysis and provide deeper insights into vendor strategies and market trends.
+
+
 
 ## Posterior predictive check
 
