@@ -6,7 +6,7 @@ author:
 thanks: "Code and data are available at: https://github.com/HeTianning/The-price-of-strawberries"
 date: 25 November 2024
 date-format: long
-abstract: "This study investigates the pricing of strawberries across eight major suppliers in Canada: Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart, and Save-On-Foods. Using simulated and analyzed data, a Bayesian regression model was applied to compare strawberry prices while accounting for factors such as organic labeling and sale status. Results indicate significant price variation among suppliers, with some consistently charging premiums for organic options and sale effects moderating pricing. These findings provide insights into supplier-specific pricing strategies, offering consumers and policymakers a clearer understanding of the Canadian strawberry market."
+abstract: "This study investigates the pricing of strawberries across eight major suppliers in Canada: Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart, and Save-On-Foods. Using a dataset containing variables such as current price, old price, and month, a Bayesian regression model was applied to analyze the relationships between pricing strategies, seasonal trends, and vendor-specific practices. Results reveal significant price variation among suppliers, with old price showing a strong positive correlation with current price, reflecting the impact of prior pricing strategies on current prices. Seasonal trends captured by the month variable indicate subtle but consistent fluctuations in pricing, highlighting the influence of supply and demand dynamics. These findings provide actionable insights into supplier-specific pricing strategies and market behavior, offering valuable guidance to consumers and stakeholders in the Canadian strawberry market."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -555,7 +555,7 @@ The data analysis plan integrates EDA, Bayesian linear regression, diagnostic ch
 #| tbl-cap: "Summary Statistics and Distribution Overview of the Analysis Dataset"
 #| warning: false
 
-datasummary_skim(analysis_dataset)
+datasummary_skim(analysis_data)
 
 ```
 ###Data Source and Cleaning Process
