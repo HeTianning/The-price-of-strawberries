@@ -50,7 +50,7 @@ The rest of the paper is structured as follows. @sec-data describes the data col
 # Data {#sec-data}
 To simulate, test, download, clean, and model data throughout this analysis, the statistical programming language R was used [@citeR]. Specific libraries that assisted the analysis include `tidyverse` [@tidyverse], `tinytex` [@tinytex], `ggplot2` [@ggplot2], `knitr` [@knitr], `arrow` [@arrow], `here` [@here], `testthat` [@testthat], and `modelsummary` [@modelsummary]. 
 ## Overview
-The data for this analysis was provided by Project Hammer [@data], which was collected through a process of scraping website UI screens from vendors within the Toronto community. It contains data on product details (e.g., product name, brand, current and old price, and unit of product) for 8 different grocery stores (Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart Canada, and Save-On-Foods). Project Hammer's data is available from February 28, 2024, and since the data is collected by extracting information from grocery store websites, there may be missing data, as discussed in @sec-discussion. Through the method of screen scraping, the raw data is intended to measure and reflect grocery store vendor decisions and product pricing trends.
+The data for this analysis was provided by Project Hammer [@filipp2024hammer], which was collected through a process of scraping website UI screens from vendors within the Toronto community. It contains data on product details (e.g., product name, brand, current and old price, and unit of product) for 8 different grocery stores (Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart Canada, and Save-On-Foods). Project Hammer's data is available from February 28, 2024, and since the data is collected by extracting information from grocery store websites, there may be missing data, as discussed in appendix. Through the method of screen scraping, the raw data is intended to measure and reflect grocery store vendor decisions and product pricing trends.
 For this analysis, the eight vendors - Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart Canada, and Save-On-Foods - and their pricing for strawberries were considered. The variable “price” for each supplier in this analysis reflects the current price of their product at the time the data was downloaded.
 
 ## Measurement
@@ -174,20 +174,6 @@ The inclusion of variables like vendor, old price, current price, and month enri
 The addition of month introduces a temporal dimension, enabling the analysis of seasonal trends that are common in agricultural markets. Combining these predictors provides a holistic view of pricing dynamics, revealing how vendors adapt to seasonal supply fluctuations, consumer demand, and competitive pressures.
 
 By leveraging these predictor variables, the study offers actionable insights into how strawberry prices are shaped by market forces, vendor decisions, and seasonal trends. These findings are crucial for both consumers seeking to optimize purchases and vendors aiming to refine their pricing strategies to remain competitive.
-
-```{r}
-#| label: fig-combined
-#| fig-cap: Price Trends by Vendor Over Time
-#| echo: false
-#| warning: false
-#| message: false
-
-
-
-```
-
-
-
 
 
 
@@ -349,7 +335,7 @@ vendor_price_model <-
 #| echo: false
 #| eval: true
 #| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
+#| tbl-cap: "Explanatory model based on strawberry prices"
 #| warning: false
 
 modelsummary::modelsummary(
@@ -562,7 +548,16 @@ The data analysis plan integrates EDA, Bayesian linear regression, diagnostic ch
 
 
 ## Additional data details
+```{r}
+#| echo: false
+#| eval: true
+#| label: tbl-modelresults
+#| tbl-cap: "Summary Statistics and Distribution Overview of the Analysis Dataset"
+#| warning: false
 
+datasummary_skim(analysis_data)
+
+```
 ###Data Source and Cleaning Process
 The data for this study comes from the Project Hammer website, an open data platform centered on grocery prices from multiple suppliers in Canada. The platform captures multidimensional data including product prices, supplier information, promotional discounts, etc. through web scraping technology, and combines manual verification to ensure its reliability. These data provide price dynamics in different regions and suppliers in Canada, laying the foundation for studying the fluctuations and market strategies of strawberry prices.
 
