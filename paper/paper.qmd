@@ -371,7 +371,7 @@ Future work can address these limitations by incorporating non-linear models suc
 
 # Appendix {-}
 
-## Comprehensive Data Collection Plan for Strawberry Pricing Analysis
+# Comprehensive Data Collection Plan for Strawberry Pricing Analysis
 
 **Introduction to Survey Design**
 
