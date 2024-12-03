@@ -155,15 +155,15 @@ The chosen model is a **Bayesian linear regression model**, which builds on the 
 
 **Predictors in the Model**
 
-- **Vendor (`vendor`)**: A categorical variable identifying the supplier of strawberries. Different vendors adopt distinct pricing strategies that influence strawberry prices.
+- **Vendor ($\text{vendor}$)**: A categorical variable identifying the supplier of strawberries. Different vendors adopt distinct pricing strategies that influence strawberry prices.
 
-- **Original Price (`old_price`)**: A continuous variable representing the original price of strawberries before discounts or promotions. This variable reflects vendor-specific baseline pricing strategies.
+- **Original Price ($\text{old\_price}$)**: A continuous variable representing the original price of strawberries before discounts or promotions. This variable reflects vendor-specific baseline pricing strategies.
 
-- **Month (`month`)**: A numeric variable capturing the observation month, enabling the analysis of seasonal trends and time-based fluctuations.
+- **Month ($\text{month}$)**: A numeric variable capturing the observation month, enabling the analysis of seasonal trends and time-based fluctuations.
 
-- **Price Gap (`old_price - current_price`)**: A derived variable quantifying the magnitude of discounts or markdowns applied by vendors.
+- **Price Gap ($\text{old\_price} - \text{current\_price}$)**: A derived variable quantifying the magnitude of discounts or markdowns applied by vendors.
 
-**Model set-up**
+**Model Set-Up**
 
 The Bayesian linear regression model is expressed as:
 
@@ -173,7 +173,7 @@ y_i = \beta_0 + \beta_{\text{vendor}[i]} + \beta_{\text{old\_price}} \cdot x_{\t
 
 where
 
-- $y_i$: Current price (`current_price`) of strawberries for observation $i$ (dependent variable).  
+- $y_i$: Current price ($\text{current\_price}$) of strawberries for observation $i$ (dependent variable).  
 - $\beta_0$: Intercept, representing the baseline price (reference vendor, average original price, and earliest month).  
 - $\beta_{\text{vendor}[i]}$: Vendor-specific effect, capturing how each supplier’s prices deviate from the baseline vendor.  
 - $\beta_{\text{old\_price}}$: Effect of the original price, representing how the initial pricing influences the current price.  
@@ -194,8 +194,8 @@ For the residual standard deviation ($\sigma$):
 \sigma \sim \text{Exponential}(1)
 \]
 
+The priors in this analysis reflect reasonable assumptions about the relationships between predictors and strawberry prices. Coefficients ($\beta$) are assigned normal priors ($\text{Normal}(0, 2.5)$) to reflect the expectation that most effects are small and centered around zero, with moderate variability. For example, $\beta_{\text{old\_price}}$ is expected to be positive, reflecting the influence of original prices on current prices, while $\beta_{\text{month}}$ accounts for typically small seasonal pricing effects. The intercept ($\beta_0$) also follows a $\text{Normal}(0, 2.5)$, assuming the baseline price is near zero with moderate deviations. Finally, the residual standard deviation ($\sigma$) is given an exponential prior ($\text{Exponential}(1)$) to ensure positivity and account for variability not captured by the predictors.
 
-The priors in this analysis reflect reasonable assumptions about the relationships between predictors and strawberry prices. Coefficients $(\beta)$ are assigned normal priors $(\operatorname{Normal}(0,2.5)$ ) to reflect the expectation that most effects are small and centered around zero, with moderate variability. For example, $\beta_{\text {old_price }}$ is expected to be positive, reflecting the influence of original prices on current prices, while $\beta_{\text {month }}$ accounts for typically small seasonal pricing effects. The intercept $\left(\beta_0\right)$ also follows a Normal $(0,2.5)$, assuming the baseline price is near zero with moderate deviations. Finally, the residual standard deviation $(\sigma)$ is given an exponential prior $(\operatorname{Exponential}(1))$ to ensure positivity and account for variability not captured by the predictors.
 
 We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
 
