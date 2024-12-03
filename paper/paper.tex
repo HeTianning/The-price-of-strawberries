@@ -728,18 +728,18 @@ Benefits of Using Bayesian Regression:
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  Uncertainty Quantification:
+  \textbf{Uncertainty Quantification}:
 
   \begin{itemize}
   \tightlist
   \item
     The Bayesian approach provides posterior distributions for each
     parameter, allowing for uncertainty quantification. For example, the
-    posterior distribution of ( \beta\_\{\text{vendor}\} ) helps
-    quantify the uncertainty around vendor-specific pricing effects.
+    posterior distribution of \(\beta_{\text{vendor}}\) helps quantify
+    the uncertainty around vendor-specific pricing effects.
   \end{itemize}
 \item
-  Incorporating Prior Knowledge:
+  \textbf{Incorporating Prior Knowledge}:
 
   \begin{itemize}
   \tightlist
@@ -750,18 +750,18 @@ Benefits of Using Bayesian Regression:
     \begin{itemize}
     \tightlist
     \item
-      ( \beta\_\{\text{vendor}\} ): Reflects the expectation that most
+      \(\beta_{\text{vendor}}\): Reflects the expectation that most
       vendor effects are close to zero, with some deviations.
     \item
-      ( \beta\_\{\text{month}\} ): Captures small but meaningful
-      seasonal effects.
+      \(\beta_{\text{month}}\): Captures small but meaningful seasonal
+      effects.
     \item
-      ( \beta\_\{\text{old\_price}\} ): Represents the assumption that
+      \(\beta_{\text{old\_price}}\): Represents the assumption that
       higher original prices lead to higher observed prices.
     \end{itemize}
   \end{itemize}
 \item
-  Handling Sparse Data:
+  \textbf{Handling Sparse Data}:
 
   \begin{itemize}
   \tightlist
@@ -771,16 +771,16 @@ Benefits of Using Bayesian Regression:
     estimates, reducing the risk of overfitting.
   \end{itemize}
 \item
-  Probabilistic Insights:
+  \textbf{Probabilistic Insights}:
 
   \begin{itemize}
   \tightlist
   \item
     Posterior distributions provide credible intervals, making it easier
     to interpret parameter estimates. For instance, a 95\% credible
-    interval for ( \beta\_\{\text{old\_price}\} ) of ({[}0.8, 1.2{]})
-    means there is a 95\% probability that the original price effect
-    lies within this range.
+    interval for \(\beta_{\text{old\_price}}\) of \([0.8, 1.2]\) means
+    there is a 95\% probability that the original price effect lies
+    within this range.
   \end{itemize}
 \end{enumerate}
 
@@ -860,61 +860,6 @@ dynamics in the Canadian market.
 \section{Results}\label{sec-result}
 
 Our results are summarized in Table~\ref{tbl-modelresults}.
-
-\begin{table}
-
-\caption{\label{tbl-modelresults}Explanatory model based on strawberry
-prices}
-
-\centering{
-
-\centering
-\begin{tblr}[         %% tabularray outer open
-]                     %% tabularray outer close
-{                     %% tabularray inner open
-colspec={Q[]Q[]},
-column{1}={halign=l,},
-column{2}={halign=c,},
-hline{22}={1,2}{solid, 0.05em, black},
-}                     %% tabularray inner close
-\toprule
-& strawberry price model \\ \midrule %% TinyTableHeader
-(Intercept)       & \num{1.52}        \\
-& (\num{0.66})      \\
-vendorLoblaws     & \num{-0.09}       \\
-& (\num{0.63})      \\
-vendorMetro       & \num{7.50}        \\
-& (\num{0.59})      \\
-vendorNoFrills    & \num{-0.81}       \\
-& (\num{0.62})      \\
-vendorSaveOnFoods & \num{-1.00}       \\
-& (\num{0.63})      \\
-vendorTandT       & \num{-0.91}       \\
-& (\num{0.73})      \\
-vendorVoila       & \num{-0.76}       \\
-& (\num{0.61})      \\
-vendorWalmart     & \num{-0.76}       \\
-& (\num{0.63})      \\
-month             & \num{0.05}        \\
-& (\num{0.04})      \\
-old\_price       & \num{0.59}        \\
-& (\num{0.01})      \\
-Num.Obs.          & \num{44854}       \\
-R2                & \num{0.139}       \\
-R2 Adj.           & \num{0.137}       \\
-Log.Lik.          & \num{-174308.202} \\
-ELPD              & \num{-174364.4}   \\
-ELPD s.e.         & \num{1452.9}      \\
-LOOIC             & \num{348728.7}    \\
-LOOIC s.e.        & \num{2905.8}      \\
-WAIC              & \num{348728.9}    \\
-RMSE              & \num{11.79}       \\
-\bottomrule
-\end{tblr}
-
-}
-
-\end{table}%
 
 The Bayesian linear regression model provides valuable insights into the
 factors affecting strawberry prices (\(\text{current\_price}\)) across
@@ -1364,16 +1309,16 @@ structure:
 \beta\emph{\{\text{old\_price}\} \cdot x}\{\text{old\_price}{[}i{]}\} +
 \epsilon\_i {]}
 
-Each coefficient ((\beta)) will have a prior distribution, such as a
+Each coefficient (\(\beta\)) will have a prior distribution, such as a
 normal prior centered at zero, reflecting initial uncertainty about its
-effect. For instance, the prior for (\beta\emph{\{\text{vendor}\})
-assumes no significant differences between vendors initially, allowing
-the data to dominate posterior estimates. The Bayesian framework also
-provides posterior distributions for each parameter, which capture
-uncertainty and enable credible intervals for inference. For example, a
-95\% credible interval for (\beta}\{\text{old\_price}\}) indicates the
-range of plausible values for the effect of original prices on current
-prices, accounting for uncertainty.
+effect. For instance, the prior for \(\beta_{\text{vendor}}\) assumes no
+significant differences between vendors initially, allowing the data to
+dominate posterior estimates. The Bayesian framework also provides
+posterior distributions for each parameter, which capture uncertainty
+and enable credible intervals for inference. For example, a 95\%
+credible interval for \(\beta_{\text{old\_price}}\) indicates the range
+of plausible values for the effect of original prices on current prices,
+accounting for uncertainty.
 
 The Bayesian approach offers significant advantages, including the
 ability to stabilize estimates for predictors with limited observations
@@ -1485,9 +1430,9 @@ hline{5}={1,2,3,4,5,6,7,8,9}{solid, 0.1em, black},
 }                     %% tabularray inner close
 \toprule
 & Unique & Missing Pct. & Mean & SD & Min & Median & Max & Histogram \\ \midrule %% TinyTableHeader
-current\_price & 238 & 0 & 7.8 & 12.7 & 0.0 & 5.0 & 290.0 & \includegraphics[height=1em]{tinytable_assets/idmt8er0r82vj37ek89zop.png} \\
-old\_price & 200 & 0 & 6.1 & 4.3 & 0.4 & 5.4 & 348.0 & \includegraphics[height=1em]{tinytable_assets/ido1q3pnzjq4gbr9teqt8b.png} \\
-month & 8 & 0 & 8.9 & 1.6 & 4.0 & 9.0 & 11.0 & \includegraphics[height=1em]{tinytable_assets/idx5eyfzffe0ymhqp3okzw.png} \\
+current\_price & 238 & 0 & 7.8 & 12.7 & 0.0 & 5.0 & 290.0 & \includegraphics[height=1em]{tinytable_assets/idipy3vtsc1mlpgxt8o3o7.png} \\
+old\_price & 200 & 0 & 6.1 & 4.3 & 0.4 & 5.4 & 348.0 & \includegraphics[height=1em]{tinytable_assets/idp1xv0vuvfk5ug1wh0mm9.png} \\
+month & 8 & 0 & 8.9 & 1.6 & 4.0 & 9.0 & 11.0 & \includegraphics[height=1em]{tinytable_assets/idoylf132wx8wev5gteo4b.png} \\
 vendor & N & \% &  &  &  &  &  &  \\
 Galleria & 400 & 0.9 &  &  &  &  &  &  \\
 Loblaws & 4595 & 10.2 &  &  &  &  &  &  \\
@@ -1602,19 +1547,19 @@ of each predictor's effect.
 
 The primary dependent variable in the model is \texttt{current\_price},
 representing the observed price per pound of strawberries. Key
-predictors include vendor identity (\texttt{vendor}), original price
-(\texttt{old\_price}), sale status (\texttt{sale\_status}), and temporal
-trends (\texttt{month}). These variables capture the diverse factors
-influencing pricing, such as competitive strategies among vendors,
-promotional effects, and seasonal supply-demand dynamics.
+predictors include vendor identity (\(\text{vendor}\)), original price
+(\(\text{old\_price}\)), sale status (\(\text{sale\_status}\)), and
+temporal trends (\(\text{month}\)). These variables capture the diverse
+factors influencing pricing, such as competitive strategies among
+vendors, promotional effects, and seasonal supply-demand dynamics.
 
 The model specification includes normal priors for regression
-coefficients ((\beta)) and an exponential prior for the residual
-standard deviation ((\sigma)). This setup reflects reasonable
+coefficients (\(\beta\)) and an exponential prior for the residual
+standard deviation (\(\sigma\)). This setup reflects reasonable
 assumptions about the effects of predictors, such as small, centered
 effects with moderate variability. For instance, the prior for
-(\beta\_\{\text{vendor}\}) assumes no extreme pricing differences
-between vendors, while allowing the data to dominate posterior updates.
+\(\beta_{\text{vendor}}\) assumes no extreme pricing differences between
+vendors, while allowing the data to dominate posterior updates.
 
 \textbf{Model Diagnostics and Validation}
 

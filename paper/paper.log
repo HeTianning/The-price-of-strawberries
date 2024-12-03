@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.12.3)  3 DEC 2024 13:33
+This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.12.3)  3 DEC 2024 18:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -659,7 +659,7 @@ File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count366
 ))
 Package hyperref Info: Option `colorlinks' set `true' on input line 196.
-(./paper.aux)
+No file paper.aux.
 \openout1 = `paper.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 213.
@@ -1099,10 +1099,10 @@ Missing character: There is no ∼ (U+223C) in font [lmroman10-regular]:mapping=
 l.689 \(\beta_{\text {old_price }
                                  }\) is expected to be positive, reflecting 
 Here is how much of TeX's memory you used:
- 26736 strings out of 475964
- 566318 string characters out of 5776877
+ 26733 strings out of 475964
+ 566276 string characters out of 5776877
  1210317 words of memory out of 5000000
- 49261 multiletter control sequences out of 15000+600000
+ 49260 multiletter control sequences out of 15000+600000
  569465 words of font info for 122 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  108i,8n,123p,10900b,859s stack positions out of 10000i,1000n,20000p,200000b,200000s

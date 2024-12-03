@@ -207,24 +207,25 @@ The Bayesian framework also handles sparse or imbalanced data effectively by lev
  
 Benefits of Using Bayesian Regression:
 
-1. Uncertainty Quantification:
+1. **Uncertainty Quantification**:
 
-   - The Bayesian approach provides posterior distributions for each parameter, allowing for uncertainty quantification. For example, the posterior distribution of \( \beta_{\text{vendor}} \) helps quantify the uncertainty around vendor-specific pricing effects.
+   - The Bayesian approach provides posterior distributions for each parameter, allowing for uncertainty quantification. For example, the posterior distribution of $\beta_{\text{vendor}}$ helps quantify the uncertainty around vendor-specific pricing effects.
 
-2. Incorporating Prior Knowledge:
+2. **Incorporating Prior Knowledge**:
 
    - Priors enable the incorporation of domain knowledge into the analysis. For instance:
-     - \( \beta_{\text{vendor}} \): Reflects the expectation that most vendor effects are close to zero, with some deviations.
-     - \( \beta_{\text{month}} \): Captures small but meaningful seasonal effects.
-     - \( \beta_{\text{old\_price}} \): Represents the assumption that higher original prices lead to higher observed prices.
+     - $\beta_{\text{vendor}}$: Reflects the expectation that most vendor effects are close to zero, with some deviations.
+     - $\beta_{\text{month}}$: Captures small but meaningful seasonal effects.
+     - $\beta_{\text{old\_price}}$: Represents the assumption that higher original prices lead to higher observed prices.
 
-3. Handling Sparse Data:
+3. **Handling Sparse Data**:
 
    - Bayesian models stabilize estimates when some categories (e.g., certain vendors) have fewer observations. Priors regularize the estimates, reducing the risk of overfitting.
 
-4. Probabilistic Insights:
+4. **Probabilistic Insights**:
 
-   - Posterior distributions provide credible intervals, making it easier to interpret parameter estimates. For instance, a 95% credible interval for \( \beta_{\text{old\_price}} \) of \([0.8, 1.2]\) means there is a 95% probability that the original price effect lies within this range.
+   - Posterior distributions provide credible intervals, making it easier to interpret parameter estimates. For instance, a 95% credible interval for $\beta_{\text{old\_price}}$ of $[0.8, 1.2]$ means there is a 95% probability that the original price effect lies within this range.
+
 
 ## Choice of Predictors
 
@@ -272,13 +273,13 @@ vendor_price_model <-
 #| tbl-cap: "Explanatory model based on strawberry prices"
 #| warning: false
 
-modelsummary::modelsummary(
-  list(
-    "strawberry price model" = vendor_price_model
-  ),
-  statistic = "mad",
-  fmt = 2
-)
+#modelsummary::modelsummary(
+  #list(
+  #  "strawberry price model" = vendor_price_model
+  #),
+  #statistic = "mad",
+  #fmt = 2
+#)
 ```
 
 The Bayesian linear regression model provides valuable insights into the factors affecting strawberry prices ($\text{current\_price}$) across Canadian vendors. The results reveal significant differences in vendor pricing strategies, seasonal trends, and the relationship between original and current prices. The intercept ($\beta_0 = 1.52$, SE = 0.66) represents the baseline price for the reference vendor when all predictors are at their baseline levels. This suggests that the reference vendor’s average price is modest compared to others.
@@ -539,9 +540,10 @@ Overall, the cleaned dataset provides a valuable resource for in-depth study of 
 
 The Bayesian linear regression model provides a probabilistic framework to understand the determinants of strawberry pricing across Canadian vendors. This model was chosen for its ability to incorporate prior knowledge, handle parameter uncertainty, and deliver intuitive, probabilistic interpretations of results. Unlike traditional frequentist regression, Bayesian regression generates posterior distributions for all parameters, offering insights into the uncertainty and variability of each predictor's effect.
 
-The primary dependent variable in the model is `current_price`, representing the observed price per pound of strawberries. Key predictors include vendor identity (`vendor`), original price (`old_price`), sale status (`sale_status`), and temporal trends (`month`). These variables capture the diverse factors influencing pricing, such as competitive strategies among vendors, promotional effects, and seasonal supply-demand dynamics.
+The primary dependent variable in the model is `current_price`, representing the observed price per pound of strawberries. Key predictors include vendor identity ($\text{vendor}$), original price ($\text{old\_price}$), sale status ($\text{sale\_status}$), and temporal trends ($\text{month}$). These variables capture the diverse factors influencing pricing, such as competitive strategies among vendors, promotional effects, and seasonal supply-demand dynamics.
 
-The model specification includes normal priors for regression coefficients (\(\beta\)) and an exponential prior for the residual standard deviation (\(\sigma\)). This setup reflects reasonable assumptions about the effects of predictors, such as small, centered effects with moderate variability. For instance, the prior for \(\beta_{\text{vendor}}\) assumes no extreme pricing differences between vendors, while allowing the data to dominate posterior updates.
+The model specification includes normal priors for regression coefficients ($\beta$) and an exponential prior for the residual standard deviation ($\sigma$). This setup reflects reasonable assumptions about the effects of predictors, such as small, centered effects with moderate variability. For instance, the prior for $\beta_{\text{vendor}}$ assumes no extreme pricing differences between vendors, while allowing the data to dominate posterior updates.
+
 
 **Model Diagnostics and Validation**
 
