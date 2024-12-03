@@ -1,2 +1,0 @@
-[1,"==> quarto preview paper.qmd --to pdf --no-watch-inputs --no-browse\n\n"]
-[1,"\u001B[31m\n\nprocessing file: paper.qmd\n\u001B[39m\u001B[31mError in parse_block(g[-1], g[1], params.src, markdown_mode) : \n  Duplicate chunk label 'tbl-modelresults', which has been used for the chunk:\nmodelsummary::modelsummary(\n  list(\n    \"strawberry price model\" = vendor_price_model\n  ),\n  statistic = \"mad\",\n  fmt = 2\n)\nCalls: .main ... process_file -> split_file -> lapply -> FUN -> parse_block\n\u001B[39m\u001B[31mExecution halted\n\u001B[39m"]
