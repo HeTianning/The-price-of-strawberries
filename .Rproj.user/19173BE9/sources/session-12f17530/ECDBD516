@@ -3,7 +3,7 @@
     "path": "~/Desktop/The-price-of-strawberries/paper/paper.qmd",
     "project_path": "paper/paper.qmd",
     "type": "quarto_markdown",
-    "hash": "0",
+    "hash": "2432350943",
     "contents": "",
     "dirty": false,
     "created": 1733205958526.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "530,607",
-        "scrollLine": "525"
+        "cursorPosition": "536,0",
+        "scrollLine": "541"
     },
     "folds": "",
-    "lastKnownWriteTime": 1733274192,
+    "lastKnownWriteTime": 1733282681,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1733274192285,
+    "last_content_update": 1733282681174,
     "read_only": false,
     "read_only_alternatives": []
 }
