@@ -126,7 +126,7 @@ The vendor variable is categorical, identifying the supplier of strawberries. Ea
 
 The dataset includes two continuous price variables: old price (original price) and current price (price after any promotions or discounts). The difference between these two variables provides insights into promotional behavior and markdown strategies. Vendors like No Frills and Save-On-Foods typically show small gaps between old price and current price, suggesting limited use of deep discounts, whereas Metro and Walmart exhibit larger gaps, reflecting more aggressive promotional activity. Boxplots comparing old price and current price by vendor demonstrate how discounts influence consumer pricing perceptions and vendor competition.
 
-3. Month (month)
+3. Month
 
 The month variable is numeric, capturing the month of observation. Seasonal patterns play a crucial role in strawberry pricing, with supply and demand fluctuations driving price variability. For instance, prices may drop during peak harvest months and increase during off-season periods when strawberries are scarce. Line charts tracking average monthly prices show clear temporal trends, with peaks and dips aligning with these seasonal dynamics. By analyzing month in combination with other predictors, this variable helps uncover how vendors adjust pricing strategies to reflect seasonal demand and supply conditions.
 
@@ -273,13 +273,13 @@ vendor_price_model <-
 #| tbl-cap: "Explanatory model based on strawberry prices"
 #| warning: false
 
-#modelsummary::modelsummary(
-  #list(
-  #  "strawberry price model" = vendor_price_model
-  #),
-  #statistic = "mad",
-  #fmt = 2
-#)
+modelsummary::modelsummary(
+  list(
+    "strawberry price model" = vendor_price_model
+  ),
+  statistic = "mad",
+  fmt = 2
+)
 ```
 
 The Bayesian linear regression model provides valuable insights into the factors affecting strawberry prices ($\text{current\_price}$) across Canadian vendors. The results reveal significant differences in vendor pricing strategies, seasonal trends, and the relationship between original and current prices. The intercept ($\beta_0 = 1.52$, SE = 0.66) represents the baseline price for the reference vendor when all predictors are at their baseline levels. This suggests that the reference vendor’s average price is modest compared to others.
